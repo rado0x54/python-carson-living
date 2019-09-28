@@ -1,5 +1,14 @@
+========================
 Carson Living Python API
-------------------------
+========================
+
+.. image:: https://travis-ci.org/rado0x54/python-carson-living.svg?branch=master
+    :target: https://travis-ci.org/rado0x54/python-carson-living
+
+.. image:: https://coveralls.io/repos/github/rado0x54/python-carson-living/badge.svg?branch=master
+    :target: https://coveralls.io/github/rado0x54/python-carson-living?branch=master
+
+
 
 Python Carson Living is a library written in Python that exposes the carson.live devices as Python objects.
 
