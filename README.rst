@@ -16,7 +16,27 @@ Python Carson Living is a library written in Python that exposes the carson.live
 Installation
 ------------
 
-Carson Living Python should work against ** Python 2.x >= 2.7** ** and **Python 3.x >= 3.4**.
+Carson Living Python should work against **Python 2.x >= 2.7** and **Python 3.x >= 3.5**.
+
+Development Notes
+-----------------
+Request Headers
+~~~~~~~~~~~~~~~
+The library currently works with the following base headers:
+
+.. code-block::
+
+    User-Agent: Carson/1.0.171 (live.carson.app; build:245; iOS 13.1.0) Alamofire/1.0.171
+    X-Device-Type: ios
+    X-App-Version: 1.0.171(245)
+
+Code Documentation
+~~~~~~~~~~~~~~~~~~
+The code follow the `Google Python Styleguide <https://google.github.io/styleguide/pyguide.html>`_ for docstring.
+
+
+
+
 
 License
 -------
