@@ -27,4 +27,4 @@ details.
 Credits && Thanks
 -----------------
 
-* A lot of the project setup and the API object design was inspired / launched off  https://github.com/tchellomello/python-ring-doorbell. Saved me a lot of headaches with tox, setuptools and travis!.
+* A lot of the project setup and the API object design was inspired / launched off  https://github.com/tchellomello/python-ring-doorbell. Saved me a lot of headaches with tox, setuptools and Travis!.

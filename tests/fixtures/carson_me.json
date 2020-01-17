@@ -1,0 +1,166 @@
+{
+  "code": 0,
+  "status": "OK",
+  "data": {
+    "id": 2974,
+    "firstName": "John",
+    "lastName": "Doe",
+    "properties": [
+      {
+        "id": 3381,
+        "name": "1 Audrey Zapp Dr, Jersey City",
+        "propertyLevel": "building",
+        "type": "rental",
+        "accessControl": null,
+        "cameras": [
+          {
+            "id": 472,
+            "building": 3381,
+            "buildingName": "1 Audrey Zapp Dr, Jersey City",
+            "name": "Camera 1",
+            "provider": "eagle_eye",
+            "externalId": "1007c241",
+            "staffOnly": false,
+            "defaultInBuilding": true,
+            "liveViewId": "100f1155",
+            "property": 3381,
+            "doors": [
+              1095
+            ],
+            "available": true,
+            "order": 1
+          },
+          {
+            "id": 277,
+            "building": 3381,
+            "buildingName": "1 Audrey Zapp Dr, Jersey City",
+            "name": "Camera 2",
+            "provider": "eagle_eye",
+            "externalId": "100f1155",
+            "staffOnly": false,
+            "defaultInBuilding": false,
+            "liveViewId": "100c7a1d",
+            "property": 3381,
+            "doors": [
+              595
+            ],
+            "available": true,
+            "order": 2
+          }
+        ],
+        "paymentSystem": null,
+        "paymentsEnabled": false,
+        "parentPropertyId": 1832,
+        "doorsAvailable": true,
+        "pmc": 1832,
+        "pmcName": "Statue of Liberty Inc.",
+        "visitors": [],
+        "area": {
+          "lat": 40.689247,
+          "lon": -74.044502,
+          "radius": 200
+        },
+        "visitorInviteEnabled": true,
+        "serviceRequestsEnabled": true,
+        "comelitData": {
+          "hostAddress": "127.0.0.1",
+          "port": 64100
+        },
+        "visitorInvitesLeft": 2,
+        "rootDirectory": 616,
+        "doors": [
+          {
+            "id": 1095,
+            "building": 3381,
+            "property": 3381,
+            "name": "Test Door 1",
+            "provider": "smartair",
+            "isActive": true,
+            "disabled": false,
+            "isUnitDoor": false,
+            "staffOnly": false,
+            "defaultInBuilding": true,
+            "externalId": "204",
+            "available": true,
+            "order": 1
+          },
+          {
+            "id": 515,
+            "building": 3381,
+            "property": 1835,
+            "name": "Test Door 2",
+            "provider": "smartair",
+            "isActive": true,
+            "disabled": false,
+            "isUnitDoor": true,
+            "staffOnly": false,
+            "defaultInBuilding": false,
+            "externalId": "143",
+            "available": true,
+            "order": 101
+          },
+          {
+            "id": 595,
+            "building": 3381,
+            "property": 3381,
+            "name": "Test Door 3",
+            "provider": "smartair",
+            "isActive": true,
+            "disabled": false,
+            "isUnitDoor": false,
+            "staffOnly": false,
+            "defaultInBuilding": false,
+            "externalId": "207",
+            "available": true,
+            "order": 2
+          }
+        ],
+        "paymentsAvailability": "disabled",
+        "pmcRootDirectory": 608,
+        "serviceRequestsStatus": "enabled",
+        "serviceRequestsExternalUrl": null,
+        "roles": [],
+        "units": [
+          {
+            "id": 1835,
+            "name": "Apt.",
+            "propertyLevel": "unit",
+            "building": 3381,
+            "paymentsEnabled": false,
+            "roles": [
+              4
+            ]
+          }
+        ]
+      }
+    ],
+    "contactInfo": [
+      {
+        "id": 7341,
+        "type": "email",
+        "primary": true,
+        "contactInfo": "me@example.com",
+        "verified": true,
+        "confirmationInfo": null
+      },
+      {
+        "id": 7342,
+        "type": "phone_number",
+        "primary": false,
+        "contactInfo": "+12025550172",
+        "verified": false,
+        "confirmationInfo": null
+      }
+    ],
+    "photoUrl": "https://via.placeholder.com/600/09f/fff.png",
+    "photo": {
+      "url": "https://via.placeholder.com/600/09f/fff.png",
+      "thumbnailUrl": "https://via.placeholder.com/150/09f/fff.png"
+    },
+    "verified": true,
+    "isAdmin": false,
+    "isService": false,
+    "pmcRole": null
+  },
+  "msg": null
+}

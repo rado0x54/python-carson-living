@@ -1,0 +1,6 @@
+{
+  "code": 1200,
+  "status": "AuthenticationError",
+  "data": null,
+  "msg": "Authentication credentials were not provided."
+}
