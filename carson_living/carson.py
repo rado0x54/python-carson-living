@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Python Carson Living API Class."""
+"""Carson Living API Module."""
 
 import logging
 
@@ -7,12 +7,17 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class Carson(object):
-    """A Python Abstraction object to the Carson Living API."""
+    """A Python Abstraction object to the Carson Living API.
+
+        Attributes:
+            carson_auth: The Carson Authentication class to use
+    """
 
     def __init__(self, carson_auth):
         self.carson_auth = carson_auth
 
+    def get_doors(self):
+        """Return door objects"""
 
-    def update(self):
-        """Update Devices"""
-
+    def get_cameras(self):
+        """Return camera objects"""

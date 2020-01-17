@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Command line tool for interacting with the Carson Living API"""
 
 import getpass
 import argparse
@@ -15,6 +16,7 @@ def _bar():
 
 
 def get_username():
+    """read username from STDIN"""
     try:
         username = raw_input("Username: ")
     except NameError:
@@ -41,11 +43,12 @@ def get_username():
 
 
 def main():
+    """main function"""
 
     parser = argparse.ArgumentParser(
-            description='Carson Living',
-            epilog='https://github.com/rado0x54/python-carson-living',
-            formatter_class=argparse.RawDescriptionHelpFormatter)
+        description='Carson Living',
+        epilog='https://github.com/rado0x54/python-carson-living',
+        formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument('-u',
                         '--username',
@@ -63,7 +66,7 @@ def main():
                         '--token',
                         type=str,
                         dest='token',
-                        help='existing token to reuse for the Carson Living Account')
+                        help='existing token for the Carson Living account')
 
     args = parser.parse_args()
     _header()
@@ -76,11 +79,10 @@ def main():
 
     # connect to Carson Living account
     auth = CarsonAuth(args.username, args.password, args.token)
-    carson = Carson(auth)
+    Carson(auth)
 
-    res = auth.query('https://api.carson.live/api/v1.4.0/me/')
+    res = auth.authenticated_query('https://api.carson.live/api/v1.4.0/me/')
     print(res)
-
 
     _bar()
 

@@ -1,4 +1,5 @@
-"""Helper methods for Carson Living tests."""
+# -*- coding: utf-8 -*-
+"""Helper Module for Carson Living tests."""
 import os
 
 

@@ -1,25 +1,22 @@
 # -*- coding: utf-8 -*-
-"""Python Carson Living Custom Exceptions"""
+"""Carson Living custom exceptions."""
 
 
 class CarsonError(Exception):
-    pass
+    """Carson Living base error"""
 
 
-class CarsonTokenError(Exception):
-    pass
+class CarsonTokenError(CarsonError):
+    """Carson Living token error"""
 
 
 class CarsonCommunicationError(CarsonError):
-    pass
+    """Carson Living communication error"""
 
 
 class CarsonAPIError(CarsonError):
-    pass
+    """Carson Living client-side API error"""
 
 
 class CarsonAuthenticationError(CarsonAPIError):
-    pass
-
-
-
+    """Carson Living authentication error"""
