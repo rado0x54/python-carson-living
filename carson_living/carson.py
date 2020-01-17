@@ -6,6 +6,7 @@ import logging
 _LOGGER = logging.getLogger(__name__)
 
 
+# pylint: disable=useless-object-inheritance
 class Carson(object):
     """A Python Abstraction object to the Carson Living API.
 

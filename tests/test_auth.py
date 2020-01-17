@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 """Authentication Module for Carson Living tests."""
 
-import time
 import unittest
-import jwt
 import requests_mock
 
 from carson_living import (CarsonAuth,
                            CarsonAPIError,
                            CarsonTokenError,
+                           CarsonCommunicationError,
                            CarsonAuthenticationError)
-from tests.helpers import load_fixture
+from tests.helpers import load_fixture, get_encoded_token
 from tests.const import (USERNAME,
-                         PASSWORD,
-                         TOKEN_PAYLOAD_TEMPLATE)
+                         PASSWORD)
 
 FIXTURE_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.' \
                 'eyJ1c2VyX2lkIjo5OTk5LCJ1c2VybmFtZSI6I' \
@@ -43,10 +41,8 @@ class TestCarsonAuth(unittest.TestCase):
 
     def test_auth_valid_token_init(self):
         """Test default class initialization with token"""
-        token_payload = {'exp': int(time.time() + 60)}
-        token_payload.update(TOKEN_PAYLOAD_TEMPLATE)
+        token, token_payload = get_encoded_token()
 
-        token = jwt.encode(token_payload, 'secret', algorithm='HS256')
         auth = CarsonAuth(USERNAME, PASSWORD, token)
         self.assertEqual(auth.token, token)
         self.assertEqual(auth.token_payload, token_payload)
@@ -85,10 +81,7 @@ class TestCarsonAuth(unittest.TestCase):
 
     def test_expired_token_is_invalid(self):
         """Test expired token validation"""
-        token_payload = {'exp': int(time.time() - 60)}
-        token_payload.update(TOKEN_PAYLOAD_TEMPLATE)
-
-        token = jwt.encode(token_payload, 'secret', algorithm='HS256')
+        token, _ = get_encoded_token(-60)
 
         auth = CarsonAuth(USERNAME, PASSWORD, token)
         self.assertFalse(auth.valid_token())
@@ -119,10 +112,8 @@ class TestCarsonAuth(unittest.TestCase):
         mock.get(query_url,
                  text=load_fixture('carson_me.json'))
 
-        token_payload = {'exp': int(time.time() + 60)}
-        token_payload.update(TOKEN_PAYLOAD_TEMPLATE)
+        token, _ = get_encoded_token()
 
-        token = jwt.encode(token_payload, 'secret', algorithm='HS256')
         auth = CarsonAuth(USERNAME, PASSWORD, token)
 
         auth.authenticated_query(query_url)
@@ -153,3 +144,35 @@ class TestCarsonAuth(unittest.TestCase):
         self.assertEqual(6, mock.call_count)
         self.assertEqual('JWT {}'.format(FIXTURE_TOKEN),
                          mock.last_request.headers.get('Authorization'))
+
+    @requests_mock.Mocker()
+    def test_raise_communication_error_on_empty(self, mock):
+        """Test failure on empty response"""
+        query_url = 'https://api.carson.live/api/v1.4.0/me/'
+        mock.get(query_url,
+                 status_code=500)
+
+        token, _ = get_encoded_token()
+
+        auth = CarsonAuth(USERNAME, PASSWORD, token)
+
+        with self.assertRaises(CarsonCommunicationError):
+            auth.authenticated_query(query_url)
+
+        self.assertTrue(mock.called)
+
+    @requests_mock.Mocker()
+    def test_raise_communication_error_wrong_json(self, mock):
+        """Test failure on response with missing keys"""
+        query_url = 'https://api.carson.live/api/v1.4.0/me/'
+        mock.get(query_url,
+                 text=load_fixture('carson_missing_keys.json'))
+
+        token, _ = get_encoded_token()
+
+        auth = CarsonAuth(USERNAME, PASSWORD, token)
+
+        with self.assertRaises(CarsonCommunicationError):
+            auth.authenticated_query(query_url)
+
+        self.assertTrue(mock.called)

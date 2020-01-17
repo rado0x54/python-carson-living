@@ -19,6 +19,7 @@ from carson_living.error import (CarsonAPIError,
 _LOGGER = logging.getLogger(__name__)
 
 
+# pylint: disable=useless-object-inheritance
 class CarsonAuth(object):
     """A generalized Authentication Class for Carson Living.
 
