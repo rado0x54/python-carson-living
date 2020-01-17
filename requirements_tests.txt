@@ -3,6 +3,8 @@ flake8
 pylint
 pytest
 pytest-cov
+sphinx
+sphinxcontrib-napoleon
 requests_mock
 tox
 
