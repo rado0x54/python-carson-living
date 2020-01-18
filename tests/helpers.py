@@ -14,8 +14,18 @@ def load_fixture(filename):
         return fdp.read()
 
 
-def get_encoded_token(expiration_from_now_s=60):
-    """Generate a standard Carson Living Token with variable expiration"""
+def get_encoded_token(expiration_from_now_s=600):
+    """Generate a standard Carson Living Token with variable expiration
+
+    Args:
+        expiration_from_now_s: delta in s to the current_time
+
+    Returns:
+        (tuple): tuple containing:
+
+            token(str): encoded token
+            token_payload(dict): decoded token payload
+    """
     token_payload = {'exp': int(time.time() + expiration_from_now_s)}
     token_payload.update(TOKEN_PAYLOAD_TEMPLATE)
 

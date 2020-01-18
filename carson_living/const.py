@@ -38,3 +38,5 @@ API_URI = 'https://api.carson.live/api/' + API_VERSION
 
 AUTH_ENDPOINT = '/auth/login/'
 ME_ENDPOINT = '/me/'
+
+EAGLEEYE_SESSION_ENDPOINT = '/properties/buildings/{}/eagleeye/session/'

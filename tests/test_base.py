@@ -5,6 +5,7 @@ import unittest
 
 from carson_living import (Carson, CarsonAuth)
 from tests.const import (USERNAME, PASSWORD)
+from tests.helpers import get_encoded_token
 
 
 class CarsonUnitTestBase(unittest.TestCase):
@@ -12,10 +13,9 @@ class CarsonUnitTestBase(unittest.TestCase):
 
     def setUp(self):
         """Setup unit test and load mock."""
+        token, _ = get_encoded_token()
 
-        auth = CarsonAuth(USERNAME, PASSWORD)
+        auth = CarsonAuth(USERNAME, PASSWORD, token)
 
         self.carson = Carson(auth)
 
-        # Until a query is made, login should not be executed.
-        self.assertTrue(hasattr(self.carson, "get_doors"))
