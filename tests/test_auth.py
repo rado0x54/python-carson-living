@@ -52,8 +52,8 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_update_token_success(self, mock):
         """Test token update"""
-        mock.post('https://api.carson.live/api/v1.4.0/auth/login/',
-                  text=load_fixture('carson_login.json'))
+        mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
+                  text=load_fixture('carson.live', 'carson_login.json'))
 
         auth = CarsonAuth(USERNAME, PASSWORD)
         auth.update_token()
@@ -68,8 +68,8 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_update_token_fail(self, mock):
         """Test authentication failure in token update"""
-        mock.post('https://api.carson.live/api/v1.4.0/auth/login/',
-                  text=load_fixture('carson_auth_failure.json'),
+        mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
+                  text=load_fixture('carson.live', 'carson_auth_failure.json'),
                   status_code=401)
 
         auth = CarsonAuth(USERNAME, PASSWORD)
@@ -89,11 +89,11 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_successful_query_without_initial_token(self, mock):
         """Test automatic authentication on query without initial token"""
-        mock.post('https://api.carson.live/api/v1.4.0/auth/login/',
-                  text=load_fixture('carson_login.json'))
-        query_url = 'https://api.carson.live/api/v1.4.0/me/'
+        mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
+                  text=load_fixture('carson.live', 'carson_login.json'))
+        query_url = 'https://api.carson.live/api/v1.4.1/me/'
         mock.get(query_url,
-                 text=load_fixture('carson_me.json'))
+                 text=load_fixture('carson.live', 'carson_me.json'))
 
         auth = CarsonAuth(USERNAME, PASSWORD)
 
@@ -108,9 +108,9 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_successful_query_with_initial_token(self, mock):
         """Test query with initial valid token"""
-        query_url = 'https://api.carson.live/api/v1.4.0/me/'
+        query_url = 'https://api.carson.live/api/v1.4.1/me/'
         mock.get(query_url,
-                 text=load_fixture('carson_me.json'))
+                 text=load_fixture('carson.live', 'carson_me.json'))
 
         token, _ = get_encoded_token()
 
@@ -127,11 +127,11 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_recursive_retry(self, mock):
         """"Test recursive query retry on Authentication Failure"""
-        mock.post('https://api.carson.live/api/v1.4.0/auth/login/',
-                  text=load_fixture('carson_login.json'))
-        query_url = 'https://api.carson.live/api/v1.4.0/me/'
+        mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
+                  text=load_fixture('carson.live', 'carson_login.json'))
+        query_url = 'https://api.carson.live/api/v1.4.1/me/'
         mock.get(query_url,
-                 text=load_fixture('carson_auth_failure.json'),
+                 text=load_fixture('carson.live', 'carson_auth_failure.json'),
                  status_code=401)
 
         auth = CarsonAuth(USERNAME, PASSWORD)
@@ -148,7 +148,7 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_raise_communication_error_on_empty(self, mock):
         """Test failure on empty response"""
-        query_url = 'https://api.carson.live/api/v1.4.0/me/'
+        query_url = 'https://api.carson.live/api/v1.4.1/me/'
         mock.get(query_url,
                  status_code=500)
 
@@ -164,9 +164,9 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_raise_communication_error_wrong_json(self, mock):
         """Test failure on response with missing keys"""
-        query_url = 'https://api.carson.live/api/v1.4.0/me/'
+        query_url = 'https://api.carson.live/api/v1.4.1/me/'
         mock.get(query_url,
-                 text=load_fixture('carson_missing_keys.json'))
+                 text=load_fixture('carson.live', 'carson_missing_keys.json'))
 
         token, _ = get_encoded_token()
 

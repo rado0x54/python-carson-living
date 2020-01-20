@@ -10,9 +10,9 @@ CARSON_RESPONSE = {
 
 """Pretend to be Carson iOS Installation v1.0.171"""
 BASE_HEADERS = {
-    'User-Agent': 'Carson/1.0.171 (live.carson.app; build:245; iOS 13.1.0) '
-                  'Alamofire/1.0.171',
-    'X-App-Version': '1.0.171(245)',
+    'User-Agent': 'Carson/1.0.200 (live.carson.app; build:315; iOS 13.3.0) '
+                  'Alamofire/1.0.200',
+    'X-App-Version': '1.0.200(315)',
     'X-Device-Type': 'ios'
 }
 
@@ -33,7 +33,7 @@ BASE_HEADERS = {
 # NOT_FOUND = -1
 
 # API endpoints
-API_VERSION = 'v1.4.0'
+API_VERSION = 'v1.4.1'
 API_URI = 'https://api.carson.live/api/' + API_VERSION
 
 AUTH_ENDPOINT = '/auth/login/'
