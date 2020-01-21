@@ -34,7 +34,9 @@ Code Documentation
 ~~~~~~~~~~~~~~~~~~
 The code follow the `Google Python Styleguide <https://google.github.io/styleguide/pyguide.html>`_ for docstring.
 
-
+Git Branching Strategy
+~~~~~~~~~~~~~~~~~~~~~~
+This project uses `gitflow <https://nvie.com/posts/a-successful-git-branching-model/>`_as a git branching model.
 
 
 
