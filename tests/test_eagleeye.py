@@ -33,7 +33,7 @@ class TestCarsonAuth(unittest.TestCase):
         eagle_eye = EagleEye(mock_callback)
         eagle_eye.authenticated_query(query_url)
 
-        mock_callback.assert_called_once()
+        mock_callback.assert_called_once_with()
         self.assertTrue(mock.called_once)
 
     @requests_mock.Mocker()
@@ -49,5 +49,5 @@ class TestCarsonAuth(unittest.TestCase):
         with self.assertRaises(CarsonError):
             eagle_eye.authenticated_query(query_url)
 
-        mock_callback.assert_called_once()
+        mock_callback.assert_called_once_with()
         self.assertEqual(0, mock.call_count)
