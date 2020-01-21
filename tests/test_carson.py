@@ -1,27 +1,48 @@
 # -*- coding: utf-8 -*-
 """Carson API Module for Carson Living tests."""
 
-import requests_mock
-import json
 
 from tests.test_base import CarsonUnitTestBase
-from tests.helpers import load_fixture
 
 
 class TestCarson(CarsonUnitTestBase):
     """Carson Living API test class."""
 
-    @requests_mock.Mocker()
-    def test_get_eagle_eye_session(self, mock):
-        building_id = 1000
-        query_url = 'https://api.carson.live/api/v1.4.0/properties/buildings/{}/eagleeye/session/'.format(building_id)
-        response = load_fixture('carson_eagleeye_session.json')
-        mock.get(query_url,
-                 text=response)
+    def test_api_initialization(self):
+        """Test correct API initialization"""
+        # Test
+        self.assertTrue(self.init_me_mock.called)
+        self.assertIsNotNone(self.carson)
 
-        eagle_eye_session = self.carson.get_eagleeye_session(building_id)
+    def test_api_user_initialization(self):
+        """Test correct user entity after initialization"""
+        self.assertIsNotNone(self.carson.user)
+        self.assertEqual(
+            self.mock_carson_me.get('id'),
+            self.carson.user.entity_id)
+        self.assertEqual(
+            'carson_user_' + str(self.mock_carson_me.get('id')),
+            self.carson.user.unique_entity_id)
+        self.assertEqual(
+            self.mock_carson_me.get('firstName'),
+            self.carson.user.first_name)
+        self.assertEqual(
+            self.mock_carson_me.get('lastName'),
+            self.carson.user.last_name)
 
-        self.assertTrue(mock.called)
-        self.assertDictEqual(eagle_eye_session, json.loads(response).get('data'))
+    def test_api_buildings_initialization(self):
+        """Test correct buildings entities after initialization"""
+        buildings = self.carson.buildings
+        self.assertEqual(1, len(buildings))
 
+    def test_api_camera_initialization(self):
+        """Test correct cameras after initialization"""
+        main_building = next(iter(self.carson.buildings))
+        cameras = main_building.cameras
+        self.assertEqual(2, len(cameras))
 
+    def test_api_door_initialization(self):
+        """Test correct doors after initialization"""
+        main_building = next(iter(self.carson.buildings))
+        doors = main_building.doors
+        self.assertEqual(3, len(doors))

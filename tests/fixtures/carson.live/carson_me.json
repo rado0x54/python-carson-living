@@ -8,15 +8,15 @@
     "properties": [
       {
         "id": 3381,
-        "name": "123 Fake St",
+        "name": "122 Fake St",
         "propertyLevel": "building",
         "type": "rental",
         "accessControl": null,
         "cameras": [
           {
-            "id": 472,
+            "id": 11,
             "building": 3381,
-            "buildingName": "123 Fake St",
+            "buildingName": "122 Fake St",
             "name": "Camera 1",
             "provider": "eagle_eye",
             "externalId": "142c7001",
@@ -25,15 +25,15 @@
             "liveViewId": "5511f001",
             "property": 3381,
             "doors": [
-              1095
+              21
             ],
             "available": true,
             "order": 1
           },
           {
-            "id": 277,
+            "id": 12,
             "building": 3381,
-            "buildingName": "123 Fake St",
+            "buildingName": "122 Fake St",
             "name": "Camera 2",
             "provider": "eagle_eye",
             "externalId": "5511f001",
@@ -42,7 +42,7 @@
             "liveViewId": "100c7a1d",
             "property": 3381,
             "doors": [
-              595
+              23
             ],
             "available": true,
             "order": 2
@@ -58,7 +58,7 @@
         },
         "visitorInviteEnabled": true,
         "doorsAvailable": true,
-        "pmc": 2381,
+        "pmc": 2281,
         "pmcName": "Landlord Inc.",
         "serviceRequestsEnabled": true,
         "comelitData": {
@@ -70,7 +70,7 @@
         "rootDirectory": 616,
         "doors": [
           {
-            "id": 1095,
+            "id": 21,
             "building": 3381,
             "property": 3381,
             "name": "Door 1",
@@ -85,7 +85,7 @@
             "order": 1
           },
           {
-            "id": 515,
+            "id": 22,
             "building": 3381,
             "property": 5381,
             "name": "Door 2",
@@ -100,7 +100,7 @@
             "order": 101
           },
           {
-            "id": 595,
+            "id": 23,
             "building": 3381,
             "property": 3381,
             "name": "Door 3",

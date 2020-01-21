@@ -128,12 +128,8 @@ class CarsonAuth(object):
 
         return self._token_expiration_time > int(time.time())
 
-    def authenticated_query(self,
-                            url,
-                            method='get',
-                            params=None,
-                            json=None,
-                            retry_auth=1):
+    def authenticated_query(self, url, method='get', params=None,
+                            json=None, retry_auth=1):
         """Perform an authenticated Query against Carson Living
 
         Args:
@@ -167,10 +163,7 @@ class CarsonAuth(object):
         # special case, clear token and retry. (Recursion)
         if response.status_code == 401 and retry_auth > 0:
             self.token = None
-            return self.authenticated_query(url,
-                                            method,
-                                            params,
-                                            json,
-                                            retry_auth - 1)
+            return self.authenticated_query(
+                url, method, params, json, retry_auth - 1)
 
         return handle_response_return_data(response)

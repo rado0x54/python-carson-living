@@ -13,10 +13,13 @@ from carson_living.error import (CarsonAuthenticationError,
                                  CarsonCommunicationError,
                                  CarsonTokenError)
 
+from carson_living.eagleeye import EagleEye
+
 __all__ = ['CarsonAuth',
            'Carson',
            'CarsonAuthenticationError',
            'CarsonAPIError',
            'CarsonError',
            'CarsonCommunicationError',
-           'CarsonTokenError']
+           'CarsonTokenError',
+           'EagleEye']

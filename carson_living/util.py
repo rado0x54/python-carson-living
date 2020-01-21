@@ -41,3 +41,37 @@ def handle_response_return_data(response):
                 response.request.method, response.url))
 
     return r_json.get(CARSON_RESPONSE['DATA'])
+
+
+def update_dictionary(current_dict, update_dict, constructor):
+    """Update current_dict to update_dict without reconstructing existing
+
+    update_dictionary updates the dict current_dict to resemble update_dict
+    by
+        1. removing values from current_dict that are missing in update_dict.
+           (via del current_dict('missing'))
+        2. adding values to current_dict that are only found in update_dict.
+           (via constructor(update_dict['new'])
+        3. update values (via current_dict[i].update(update_dict['changed']))
+
+    Args:
+        current_dict: The dict to update with entities
+        update_dict: The latest dict with update payloads
+        constructor: Constructor funtion to generate entity with payload
+
+    """
+
+    existing_keys = set(current_dict.keys())
+    update_keys = set(update_dict.keys())
+
+    # Update
+    for i in existing_keys.intersection(update_keys):
+        current_dict[i].update(update_dict[i])
+
+    # Add
+    for i in update_keys.difference(existing_keys):
+        current_dict[i] = constructor(update_dict[i])
+
+    # Remove
+    for i in existing_keys.difference(update_keys):
+        del current_dict[i]

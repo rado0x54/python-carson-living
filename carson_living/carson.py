@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 """Carson Living API Module."""
-
 import logging
 
+from carson_living.entities import (CarsonUser,
+                                    CarsonBuilding)
 from carson_living.const import (API_URI,
-                                 EAGLEEYE_SESSION_ENDPOINT)
+                                 ME_ENDPOINT)
+from carson_living.util import update_dictionary
+
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -14,30 +17,55 @@ class Carson(object):
     """A Python Abstraction object to the Carson Living API.
 
         Attributes:
-            carson_auth: The Carson Authentication class to use
+            _carson_auth: The Carson Authentication class to use
+            _user: The authenticated user to Carson
+            _buildings:
+                The building properties that are associated with
+                the current user
     """
-
     def __init__(self, carson_auth):
-        self.carson_auth = carson_auth
+        self._carson_auth = carson_auth
 
-    def get_eagleeye_session(self, building_id):
-        """Retrieve a new eagle eye auth key and subdomain information
+        self._user = None
+        self._buildings = {}
 
-        Args:
-            building_id: The building id of the Carson property
+        self.update()
 
-        Returns:
-            (tuple): tuple containing:
+    @property
+    def buildings(self):
+        """Building properties that belong to the user"""
+        return self._buildings.values()
 
-                sessionid(str): Eagle Eye authentication token for account
-                subdomain(str): Eagle Eye subdomain to use with account
+    @property
+    def user(self):
+        """The current authenticated user"""
+        return self._user
+
+    def update(self):
+        """Update entity list and individual entity parameters associated with the API
 
         """
-        url = API_URI + EAGLEEYE_SESSION_ENDPOINT.format(building_id)
-        return self.carson_auth.authenticated_query(url)
+        url = API_URI + ME_ENDPOINT
+        me_payload = self._carson_auth.authenticated_query(url)
 
-    def get_doors(self):
-        """Return door objects"""
+        self._update_user(me_payload)
+        self._update_buildings(me_payload)
 
-    def get_cameras(self):
-        """Return camera objects"""
+    def _update_user(self, payload):
+        if self._user is None:
+            self._user = CarsonUser(entity_payload=payload)
+        else:
+            self._user.update(payload)
+
+    def _update_buildings(self, payload):
+        # Not 100% if propertyLevel condition is playing it overly safe.
+        update_buildings = {p['id']: p
+                            for p in payload.get('properties')
+                            if p['propertyLevel'] == 'building'}
+
+        update_dictionary(
+            self._buildings,
+            update_buildings,
+            lambda p: CarsonBuilding(
+                self,
+                entity_payload=p))
