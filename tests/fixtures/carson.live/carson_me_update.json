@@ -1,0 +1,236 @@
+{
+  "code": 0,
+  "status": "OK",
+  "data": {
+    "id": 2974,
+    "firstName": "John_update",
+    "lastName": "Doe_update",
+    "properties": [
+      {
+        "id": 3381,
+        "name": "122 Fake St_update",
+        "propertyLevel": "building",
+        "type": "rental_update",
+        "accessControl": null,
+        "cameras": [
+          {
+            "id": 11,
+            "building": 3381,
+            "buildingName": "122 Fake St_update",
+            "name": "Camera 1_update",
+            "provider": "eagle_eye",
+            "externalId": "142c7001_update",
+            "staffOnly": false,
+            "defaultInBuilding": true,
+            "liveViewId": "5511f001_update",
+            "property": 3381,
+            "doors": [
+              21
+            ],
+            "available": true,
+            "order": 1
+          },
+          {
+            "id": 13,
+            "building": 3381,
+            "buildingName": "122 Fake St_new",
+            "name": "Camera 3_new",
+            "provider": "eagle_eye",
+            "externalId": "5511f001_new",
+            "staffOnly": false,
+            "defaultInBuilding": false,
+            "liveViewId": "100c7a1d_new",
+            "property": 3381,
+            "doors": [],
+            "available": true,
+            "order": 3
+          },
+          {
+            "id": 14,
+            "building": 3381,
+            "buildingName": "122 Fake St_new",
+            "name": "Camera 4_new",
+            "provider": "eagle_eye",
+            "externalId": "5511f001_new",
+            "staffOnly": false,
+            "defaultInBuilding": false,
+            "liveViewId": "100c7a1d_new",
+            "property": 3381,
+            "doors": [],
+            "available": true,
+            "order": 4
+          }
+        ],
+        "paymentSystem": null,
+        "paymentsEnabled": false,
+        "visitors": [],
+        "area": {
+          "lat": 41.7866273,
+          "lon": -71.9755359,
+          "radius": 200
+        },
+        "visitorInviteEnabled": true,
+        "doorsAvailable": true,
+        "pmc": 2281,
+        "pmcName": "Landlord Inc._update",
+        "serviceRequestsEnabled": true,
+        "comelitData": {
+          "hostAddress": "100.12.113.28_update",
+          "port": 64100
+        },
+        "visitorInvitesLeft": 4,
+        "visitorValidUntilLimitDays": null,
+        "rootDirectory": 616,
+        "doors": [
+          {
+            "id": 21,
+            "building": 3381,
+            "property": 3381,
+            "name": "Door 1_update",
+            "provider": "smartair_update",
+            "isActive": true,
+            "disabled": false,
+            "isUnitDoor": false,
+            "staffOnly": false,
+            "defaultInBuilding": true,
+            "externalId": "204_update",
+            "available": true,
+            "order": 1
+          },
+          {
+            "id": 22,
+            "building": 3381,
+            "property": 5381,
+            "name": "Door 2_update",
+            "provider": "smartair_update",
+            "isActive": true,
+            "disabled": false,
+            "isUnitDoor": true,
+            "staffOnly": false,
+            "defaultInBuilding": false,
+            "externalId": "143_update",
+            "available": true,
+            "order": 101
+          },
+          {
+            "id": 24,
+            "building": 3381,
+            "property": 3381,
+            "name": "Door 4_new",
+            "provider": "smartair_new",
+            "isActive": true,
+            "disabled": false,
+            "isUnitDoor": false,
+            "staffOnly": false,
+            "defaultInBuilding": true,
+            "externalId": "207_new",
+            "available": true,
+            "order": 2
+          },
+          {
+            "id": 25,
+            "building": 3381,
+            "property": 3381,
+            "name": "Door 5_new",
+            "provider": "smartair_new",
+            "isActive": true,
+            "disabled": false,
+            "isUnitDoor": false,
+            "staffOnly": false,
+            "defaultInBuilding": true,
+            "externalId": "207_new",
+            "available": true,
+            "order": 2
+          }
+        ],
+        "paymentsAvailability": "disabled_update",
+        "pmcRootDirectory": 608,
+        "serviceRequestsStatus": "enabled_update",
+        "serviceRequestsExternalUrl": null,
+        "possibleToReceiveCalls": true,
+        "country": "United States_update",
+        "state": "New York_update",
+        "timezone": "America/New_York_update",
+        "roles": [],
+        "units": [
+          {
+            "id": 5381,
+            "name": "Unit 1_update",
+            "propertyLevel": "unit_update",
+            "building": 3381,
+            "paymentsEnabled": false,
+            "roles": [
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "id": 3382,
+        "name": "122 Fake St_new",
+        "propertyLevel": "building",
+        "type": "rental_new",
+        "accessControl": null,
+        "cameras": [],
+        "paymentSystem": null,
+        "paymentsEnabled": false,
+        "visitors": [],
+        "area": {
+          "lat": 41.7866273,
+          "lon": -71.9755359,
+          "radius": 200
+        },
+        "visitorInviteEnabled": true,
+        "doorsAvailable": true,
+        "pmc": 2281,
+        "pmcName": "Landlord Inc._new",
+        "serviceRequestsEnabled": true,
+        "comelitData": {
+          "hostAddress": "100.12.113.28_new",
+          "port": 64100
+        },
+        "visitorInvitesLeft": 4,
+        "visitorValidUntilLimitDays": null,
+        "rootDirectory": 616,
+        "doors": [],
+        "paymentsAvailability": "disabled_new",
+        "pmcRootDirectory": 608,
+        "serviceRequestsStatus": "enabled_new",
+        "serviceRequestsExternalUrl": null,
+        "possibleToReceiveCalls": true,
+        "country": "United States_new",
+        "state": "New York_new",
+        "timezone": "America/New_York_new",
+        "roles": [],
+        "units": []
+      }
+    ],
+    "contactInfo": [
+      {
+        "id": 1437,
+        "type": "email_update",
+        "primary": true,
+        "contactInfo": "jon.doe@fake-gmail.com_update",
+        "verified": true,
+        "confirmationInfo": null
+      },
+      {
+        "id": 2437,
+        "type": "phone_number_update",
+        "primary": true,
+        "contactInfo": "+14158890432_update",
+        "verified": true,
+        "confirmationInfo": null
+      }
+    ],
+    "photo": {
+      "url": "https://via.placeholder.com/600/09f/fff.png_update",
+      "thumbnailUrl": "https://carson-assets.s3.amazonaws.com/photos/cd76ffe499030f1c16d364f75748cec3dd1eb304-thumbnail.png_update"
+    },
+    "verified": true,
+    "isAdmin": false,
+    "isService": false,
+    "pmcRole": null
+  },
+  "msg": null
+}

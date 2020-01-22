@@ -77,82 +77,79 @@ class TestCarson(CarsonUnitTestBase):
         self.assertEqual(1, len(buildings))
 
         mock_building_payload = self.mock_carson_me['properties'][0]
-        main_building = next(iter(self.carson.buildings))
 
         self.assertEqual(
             'carson_building_' + str(mock_building_payload.get('id')),
-            main_building.unique_entity_id
+            self.first_building.unique_entity_id
         )
 
         # Check mapping
         self.assertEqual(
             mock_building_payload['name'],
-            main_building.name
+            self.first_building.name
         )
         self.assertEqual(
             mock_building_payload['type'],
-            main_building.type
+            self.first_building.type
         )
         self.assertEqual(
             mock_building_payload['paymentsEnabled'],
-            main_building.payments_enabled
+            self.first_building.payments_enabled
         )
         self.assertEqual(
             mock_building_payload['area'],
-            main_building.area
+            self.first_building.area
         )
         self.assertEqual(
             mock_building_payload['visitorInviteEnabled'],
-            main_building.visitor_invite_enabled
+            self.first_building.visitor_invite_enabled
         )
         self.assertEqual(
             mock_building_payload['doorsAvailable'],
-            main_building.doors_available
+            self.first_building.doors_available
         )
         self.assertEqual(
             mock_building_payload['pmcName'],
-            main_building.pmc_name
+            self.first_building.pmc_name
         )
         self.assertEqual(
             mock_building_payload['serviceRequestsEnabled'],
-            main_building.service_requests_enabled
+            self.first_building.service_requests_enabled
         )
         self.assertEqual(
             mock_building_payload['country'],
-            main_building.country
+            self.first_building.country
         )
         self.assertEqual(
             mock_building_payload['state'],
-            main_building.state
+            self.first_building.state
         )
         self.assertEqual(
             mock_building_payload['timezone'],
-            main_building.timezone
+            self.first_building.timezone
         )
 
-        self.assertEqual(1, len(main_building.units))
-        for i in range(len(main_building.units)):
+        self.assertEqual(1, len(self.first_building.units))
+        for i in range(len(self.first_building.units)):
             self.assertEqual(
                 mock_building_payload['units'][i]['name'],
-                main_building.units[i]['name']
+                self.first_building.units[i]['name']
             )
             self.assertEqual(
                 mock_building_payload['units'][i]['paymentsEnabled'],
-                main_building.units[i]['payments_enabled']
+                self.first_building.units[i]['payments_enabled']
             )
 
     def test_api_camera_initialization(self):
         """Test correct cameras after initialization"""
-        main_building = next(iter(self.carson.buildings))
-        cameras = main_building.cameras
+        cameras = self.first_building.cameras
         self.assertEqual(2, len(cameras))
 
     def test_api_door_initialization(self):
         """Test correct doors after initialization"""
-        main_building = next(iter(self.carson.buildings))
         mock_building_payload = self.mock_carson_me['properties'][0]
 
-        doors = main_building.doors
+        doors = self.first_building.doors
         self.assertEqual(3, len(doors))
 
         i = 0
@@ -207,11 +204,9 @@ class TestCarson(CarsonUnitTestBase):
 
     def test_api_door_open(self):
         """Test correct door open"""
-
-        main_building = next(iter(self.carson.buildings))
         mock_building_payload = self.mock_carson_me['properties'][0]
 
-        doors = main_building.doors
+        doors = self.first_building.doors
 
         i = 0
         for door in doors:
@@ -229,3 +224,48 @@ class TestCarson(CarsonUnitTestBase):
                 self.assertTrue(mock.called)
                 self.assertEqual(1, mock.call_count)
                 i += 1
+
+    @requests_mock.Mocker()
+    def test_later_carson_update_changes_entities(self, mock):
+        """Later calling update changes the entities"""
+        mock.get(
+            'https://api.carson.live/api/{}/me/'.format(API_VERSION),
+            text=load_fixture('carson.live', 'carson_me_update.json')
+        )
+
+        self.carson.update()
+
+        self.assertTrue(mock.called)
+
+        update_postfix = '_update'
+        new_postfix = '_new'
+
+        # User updated successfully
+        self.assertEqual(
+            self.mock_carson_me.get('firstName') + update_postfix,
+            self.carson.user.first_name
+        )
+
+        self.assertEqual(2, len(self.carson.buildings))
+
+        building_iter = iter(self.carson.buildings)
+        next(building_iter)  # skip first_building
+        added_building = next(building_iter)
+
+        # Building updated successfully
+        self.assertEqual(
+            self.mock_carson_me['properties'][0]['name'] + update_postfix,
+            self.first_building.name
+        )
+
+        # Building added
+        self.assertEqual(
+            self.mock_carson_me['properties'][0]['name'] + new_postfix,
+            added_building.name
+        )
+
+        # Camera deleted, changed, added
+        self.assertEqual(3, len(self.first_building.cameras))
+
+        # Door deleted, changed, added
+        self.assertEqual(4, len(self.first_building.doors))

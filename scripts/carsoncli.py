@@ -3,7 +3,6 @@
 
 import getpass
 import argparse
-import time
 
 from carson_living import Carson
 
@@ -83,10 +82,11 @@ def main():
     carson = Carson(args.username, args.password, args.token)
     print(carson.user)
 
-    time.sleep(2)
-
-    res = carson.authenticated_query('https://api.carson.live/api/v1.4.1/me/')
-    print(res)
+    # Open all Unit Doors of Main Building
+    for door in carson.first_building.doors:
+        if door.is_unit_door:
+            print('Opening Unit Door {}'.format(door.name))
+            door.open()
 
     _bar()
 

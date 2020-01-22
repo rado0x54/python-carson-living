@@ -27,3 +27,8 @@ class CarsonUnitTestBase(unittest.TestCase):
         self.mock_carson_me = json.loads(mock_response).get('data')
 
         self.carson = Carson(USERNAME, PASSWORD, self.token)
+
+        self.first_building = self.carson.first_building
+        self.user = self.carson.first_building
+        self.first_camera = next(iter(self.first_building.cameras))
+        self.first_door = next(iter(self.first_building.doors))

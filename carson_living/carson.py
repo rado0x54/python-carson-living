@@ -39,6 +39,11 @@ class Carson(CarsonAuth):
         return self._buildings.values()
 
     @property
+    def first_building(self):
+        """Convenience Function to return first building in account"""
+        return next(iter(self.buildings))
+
+    @property
     def user(self):
         """The current authenticated user"""
         return self._user
