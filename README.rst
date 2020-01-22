@@ -36,7 +36,7 @@ The code follow the `Google Python Styleguide <https://google.github.io/stylegui
 
 Git Branching Strategy
 ~~~~~~~~~~~~~~~~~~~~~~
-This project uses `gitflow <https://nvie.com/posts/a-successful-git-branching-model/>`_as a git branching model.
+This project uses `gitflow <https://nvie.com/posts/a-successful-git-branching-model/>`_ as a git branching model.
 
 
 

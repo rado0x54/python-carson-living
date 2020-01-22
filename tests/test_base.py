@@ -5,7 +5,7 @@ import unittest
 import json
 import requests_mock
 
-from carson_living import (Carson, CarsonAuth)
+from carson_living import (Carson)
 from tests.const import (USERNAME, PASSWORD)
 from tests.helpers import load_fixture, get_encoded_token
 
@@ -19,7 +19,6 @@ class CarsonUnitTestBase(unittest.TestCase):
         """Setup unit test and load mock."""
 
         self.token, _ = get_encoded_token()
-        auth = CarsonAuth(USERNAME, PASSWORD, self.token)
 
         query_url = 'https://api.carson.live/api/v1.4.1/me/'
         mock_response = load_fixture('carson.live', 'carson_me.json')
@@ -27,4 +26,4 @@ class CarsonUnitTestBase(unittest.TestCase):
         self.init_me_mock = mock
         self.mock_carson_me = json.loads(mock_response).get('data')
 
-        self.carson = Carson(auth)
+        self.carson = Carson(USERNAME, PASSWORD, self.token)

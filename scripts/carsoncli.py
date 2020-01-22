@@ -3,7 +3,9 @@
 
 import getpass
 import argparse
-from carson_living import Carson, CarsonAuth
+import time
+
+from carson_living import Carson
 
 
 def _header():
@@ -78,10 +80,12 @@ def main():
         args.password = getpass.getpass("Password: ")
 
     # connect to Carson Living account
-    auth = CarsonAuth(args.username, args.password, args.token)
-    Carson(auth)
+    carson = Carson(args.username, args.password, args.token)
+    print(carson.user)
 
-    res = auth.authenticated_query('https://api.carson.live/api/v1.4.0/me/')
+    time.sleep(2)
+
+    res = carson.authenticated_query('https://api.carson.live/api/v1.4.1/me/')
     print(res)
 
     _bar()

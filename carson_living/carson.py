@@ -2,6 +2,8 @@
 """Carson Living API Module."""
 import logging
 
+from carson_living.auth import CarsonAuth
+
 from carson_living.entities import (CarsonUser,
                                     CarsonBuilding)
 from carson_living.const import (API_URI,
@@ -13,7 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=useless-object-inheritance
-class Carson(object):
+class Carson(CarsonAuth):
     """A Python Abstraction object to the Carson Living API.
 
         Attributes:
@@ -23,8 +25,8 @@ class Carson(object):
                 The building properties that are associated with
                 the current user
     """
-    def __init__(self, carson_auth):
-        self._carson_auth = carson_auth
+    def __init__(self, username, password, token=None):
+        super(Carson, self).__init__(username, password, token)
 
         self._user = None
         self._buildings = {}
@@ -46,7 +48,7 @@ class Carson(object):
 
         """
         url = API_URI + ME_ENDPOINT
-        me_payload = self._carson_auth.authenticated_query(url)
+        me_payload = self.authenticated_query(url)
 
         self._update_user(me_payload)
         self._update_buildings(me_payload)
