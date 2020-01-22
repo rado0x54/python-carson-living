@@ -7,7 +7,9 @@ from carson_living.error import CarsonError
 from carson_living.eagleeye import EagleEye
 from carson_living.const import (API_URI,
                                  EAGLEEYE_SESSION_ENDPOINT,
-                                 DOOR_OPEN_ENDPOINT)
+                                 DOOR_OPEN_ENDPOINT,
+                                 EAGLE_EYE_API_URI,
+                                 EAGLE_EYE_DEVICE_ENDPOINT)
 from carson_living.util import update_dictionary
 
 _LOGGER = logging.getLogger(__name__)
@@ -101,22 +103,26 @@ class _AbstractEntity(object):
                 was passes during initialization.
 
         """
-        if self._update_callback is None and self._entity_payload is None:
+        if not self._update_callback and not entity_payload:
             raise CarsonError(
                 'Trying to update entity {} without external payload '
                 'or a callback function'
                 .format(self.unique_entity_id))
 
-        if entity_payload is not None:
-            self._entity_payload = entity_payload
+        # If there is a callback execute it (Priority over pass entity_payload)
+        if self._update_callback:
             _LOGGER.info(
-                'Successfully updated entity %s from external payload',
+                'Trying to updated entity %s from update callback',
                 self.unique_entity_id)
-        else:
-            self._entity_payload = self._update_callback()
-            _LOGGER.info(
-                'Successfully updated entity %s from update callback',
-                self.unique_entity_id)
+            entity_payload = self._update_callback()
+
+        # There should be a entity_payload now, otherwise fail
+        if not entity_payload:
+            raise CarsonError(
+                'Trying to update {}, but no payload found set or returned'
+                .format(self.unique_entity_id))
+
+        self._entity_payload = entity_payload
 
         # Allow child class to perform internal updates
         self._internal_update()
@@ -173,7 +179,8 @@ class CarsonBuilding(_AbstractAPIEntity):
 
         """
         url = API_URI + EAGLEEYE_SESSION_ENDPOINT.format(self.entity_id)
-        return self._api.authenticated_query(url)
+        session = self._api.authenticated_query(url)
+        return session.get('sessionId'), session.get('activeBrandSubdomain')
 
     @property
     def entity_id(self):
@@ -200,8 +207,7 @@ class CarsonBuilding(_AbstractAPIEntity):
             self._cameras,
             update_cameras,
             lambda p: EagleEyeCamera(
-                self._eagleeye,
-                entity_payload=p))
+                self._eagleeye, p['externalId']))
 
     def _update_doors(self):
         update_doors = {d['id']: d for d in self.entity_payload.get('doors')}
@@ -584,6 +590,17 @@ class EagleEyeCamera(_AbstractAPIEntity):
     """Eagle Eye Camera Entity
 
     """
+    def __init__(self, api, ee_id):
+        self._ee_id = ee_id
+        super(EagleEyeCamera, self).__init__(
+            api,
+            update_callback=self._get_payload
+        )
+
+    def _get_payload(self):
+        url = EAGLE_EYE_API_URI + EAGLE_EYE_DEVICE_ENDPOINT
+        return self._api.authenticated_query(url,
+                                             params={'id': self.entity_id})
 
     @property
     def unique_entity_id(self):
@@ -594,4 +611,124 @@ class EagleEyeCamera(_AbstractAPIEntity):
 
     @property
     def entity_id(self):
-        return self.entity_payload.get('id')
+        return self._ee_id
+
+    @property
+    def name(self):
+        """Name
+
+        Returns: Device name
+
+        """
+        return self.entity_payload.get('name')
+
+    @property
+    def settings(self):
+        """Settings
+
+        Returns: Json object of basic settings (location, motion regions, etc.)
+
+        """
+        return self.entity_payload.get('settings')
+
+    @property
+    def utc_offset(self):
+        """UTC offset
+
+        Returns: Signed UTC offset in seconds of the set 'timezone'
+
+        """
+        return self.entity_payload.get('utcOffset')
+
+    @property
+    def timezone(self):
+        """Timezone
+
+        Returns: tz database string of the camera
+
+        """
+        return self.entity_payload.get('timezone')
+
+    @property
+    def guid(self):
+        """GUID
+
+        Returns:
+            The GUID (Globally Unique Identifier) is an immutable device
+            identifier
+
+        """
+        return self.entity_payload.get('guid')
+
+    @property
+    def permissions(self):
+        """Permissions
+
+        Returns:
+            String of characters each defining a permission level of
+            the current user
+
+        """
+        return self.entity_payload.get('permissions')
+
+    @property
+    def tags(self):
+        """Tags
+
+        Returns:
+            Array of strings each representing a tag name
+
+        """
+        return self.entity_payload.get('tags')
+
+    @property
+    def bridges(self):
+        """Bridges
+
+        Returns:
+            Json object of bridges (ESNs) this device is seen by and the
+            camera attach status:
+
+        """
+        return self.entity_payload.get('bridges')
+
+    @property
+    def camera_parameters_status_code(self):
+        """Camera parameters status code
+
+        Returns:
+            Indicates whether it was possible to retrieve the device parameters
+            (200) or not (404)
+
+        """
+        return self.entity_payload.get('camera_parameters_status_code')
+
+    @property
+    def camera_parameters(self):
+        """Camera Parameters
+
+        Returns:
+            Json object of camera parameters.
+
+        """
+        return self.entity_payload.get('camera_parameters')
+
+    @property
+    def camera_info_status_code(self):
+        """Camera info status code
+
+        Returns:
+            Indicates whether it was possible to retrieve information about
+            the device (200) or not (404)
+
+        """
+        return self.entity_payload.get('camera_info_status_code')
+
+    @property
+    def camera_info(self):
+        """Name
+
+        Returns: Json object of basic information related to a camera
+
+        """
+        return self.entity_payload.get('camera_info')

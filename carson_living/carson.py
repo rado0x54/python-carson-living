@@ -19,7 +19,6 @@ class Carson(CarsonAuth):
     """A Python Abstraction object to the Carson Living API.
 
         Attributes:
-            _carson_auth: The Carson Authentication class to use
             _user: The authenticated user to Carson
             _buildings:
                 The building properties that are associated with

@@ -6,6 +6,11 @@ import json
 import requests_mock
 
 from carson_living import (Carson)
+from carson_living.const import (API_URI,
+                                 ME_ENDPOINT,
+                                 EAGLEEYE_SESSION_ENDPOINT,
+                                 EAGLE_EYE_API_URI,
+                                 EAGLE_EYE_DEVICE_ENDPOINT)
 from tests.const import (USERNAME, PASSWORD)
 from tests.helpers import load_fixture, get_encoded_token
 
@@ -13,22 +18,49 @@ from tests.helpers import load_fixture, get_encoded_token
 class CarsonUnitTestBase(unittest.TestCase):
     """Carson Living base test class."""
 
-    @requests_mock.Mocker()
-    def setUp(self, mock):
-        # pylint: disable=arguments-differ
+    def setUp(self):
         """Setup unit test and load mock."""
+        with requests_mock.Mocker() as mock:
+            # Setup URL Mocking
+            self.token, _ = get_encoded_token()
 
-        self.token, _ = get_encoded_token()
+            self._init_default_mocks(mock, 'carson_me.json')
 
-        query_url = 'https://api.carson.live/api/v1.4.1/me/'
-        mock_response = load_fixture('carson.live', 'carson_me.json')
-        mock.get(query_url, text=mock_response)
-        self.init_me_mock = mock
-        self.mock_carson_me = json.loads(mock_response).get('data')
+            self.carson = Carson(USERNAME, PASSWORD, self.token)
+            self.first_building = self.carson.first_building
+            self.user = self.carson.first_building
+            self.first_camera = next(iter(self.first_building.cameras))
+            self.first_door = next(iter(self.first_building.doors))
 
-        self.carson = Carson(USERNAME, PASSWORD, self.token)
+    def _init_default_mocks(self, mock, c_mock_me_filename):
+        c_mock_me_txt = load_fixture('carson.live', c_mock_me_filename)
+        self.c_mock_me = json.loads(c_mock_me_txt).get('data')
+        self.c_mock_first_property = self.c_mock_me['properties'][0]
+        self.c_mock_first_door = self.c_mock_first_property['doors'][0]
+        self.c_mock_first_camera = self.c_mock_first_property['cameras'][0]
 
-        self.first_building = self.carson.first_building
-        self.user = self.carson.first_building
-        self.first_camera = next(iter(self.first_building.cameras))
-        self.first_door = next(iter(self.first_building.doors))
+        # ME Mock
+        mock.get(API_URI + ME_ENDPOINT,
+                 text=c_mock_me_txt)
+
+        # Eagle Eye Session Mock
+        c_mock_esession_txt = load_fixture(
+            'carson.live', 'carson_eagleeye_session.json')
+        self.c_mock_esession = json.loads(c_mock_esession_txt).get('data')
+
+        for b_id in [p['id'] for p in self.c_mock_me.get('properties')]:
+            mock.get(
+                API_URI + EAGLEEYE_SESSION_ENDPOINT.format(b_id),
+                text=c_mock_esession_txt
+            )
+
+        # Camera ID Mocks
+        e_mock_camera_txt = load_fixture(
+            'eagleeyenetworks.com', 'device_camera.json')
+        self.e_mock_camera = json.loads(e_mock_camera_txt)
+        mock.get(
+            EAGLE_EYE_API_URI.format(
+                self.c_mock_esession['activeBrandSubdomain'])
+            + EAGLE_EYE_DEVICE_ENDPOINT,
+            text=e_mock_camera_txt
+        )
