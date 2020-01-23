@@ -134,8 +134,14 @@ class TestCarson(CarsonUnitTestBase):
                 self.first_building.units[i]['payments_enabled']
             )
 
-        self.assertEqual(2, len(self.first_building.cameras))
         self.assertEqual(3, len(self.first_building.doors))
+
+        # Carson Building returns 2 cameras
+        self.assertEqual(2, len(self.first_building.cameras))
+
+        # Eagle Eye API returns 8 cameras
+        self.assertIsNotNone(self.first_building.eagleeye_api)
+        self.assertEqual(8, len(self.first_building.eagleeye_api.cameras))
 
     @requests_mock.Mocker()
     def test_later_carson_update_changes_entities(self, mock):

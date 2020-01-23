@@ -3,8 +3,14 @@ import requests
 
 from requests import HTTPError
 
-from carson_living.error import CarsonError, CarsonAPIError
-from carson_living.const import BASE_HEADERS
+from carson_living.error import (CarsonError,
+                                 CarsonAPIError)
+from carson_living.eagleeye_entities import EagleEyeCamera
+
+from carson_living.util import update_dictionary
+from carson_living.const import (BASE_HEADERS,
+                                 EAGLE_EYE_API_URI,
+                                 EAGLE_EYE_DEVICE_LIST_ENDPOINT)
 
 
 # pylint: disable=useless-object-inheritance
@@ -19,12 +25,14 @@ class EagleEye(object):
         self._session_callback = session_callback
         self._session_auth_key = None
         self._session_brand_subdomain = None
-        self._cameras = []
+        self._cameras = {}
+
+        self.update()
 
     @property
     def cameras(self):
         """Get all cameras returned directly by the API"""
-        return self._cameras
+        return self._cameras.values()
 
     def _update_session_auth_key(self):
         """Updates the internal session state via session_callback
@@ -96,6 +104,20 @@ class EagleEye(object):
         Eagle Eye API
 
         """
+        self._update_cameras()
 
     def _update_cameras(self):
-        pass
+        # Query List
+        device_list = self.authenticated_query(
+            EAGLE_EYE_API_URI + EAGLE_EYE_DEVICE_LIST_ENDPOINT
+        )
+
+        update_cameras = {c[1]: c
+                          for c in device_list
+                          if c[3] == 'camera'}
+
+        update_dictionary(
+            self._cameras,
+            update_cameras,
+            lambda c: EagleEyeCamera(
+                self, c[1]))

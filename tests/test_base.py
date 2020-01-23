@@ -8,11 +8,13 @@ import requests_mock
 from carson_living import (Carson)
 from carson_living.const import (API_URI,
                                  ME_ENDPOINT,
-                                 EAGLEEYE_SESSION_ENDPOINT,
-                                 EAGLE_EYE_API_URI,
-                                 EAGLE_EYE_DEVICE_ENDPOINT)
+                                 EAGLEEYE_SESSION_ENDPOINT)
+
 from tests.const import (USERNAME, PASSWORD)
-from tests.helpers import load_fixture, get_encoded_token
+from tests.helpers import (load_fixture,
+                           get_encoded_token,
+                           setup_ee_camera_mock,
+                           setup_ee_device_list_mock)
 
 
 class CarsonUnitTestBase(unittest.TestCase):
@@ -55,12 +57,9 @@ class CarsonUnitTestBase(unittest.TestCase):
             )
 
         # Camera ID Mocks
-        e_mock_camera_txt = load_fixture(
-            'eagleeyenetworks.com', 'device_camera.json')
-        self.e_mock_camera = json.loads(e_mock_camera_txt)
-        mock.get(
-            EAGLE_EYE_API_URI.format(
-                self.c_mock_esession['activeBrandSubdomain'])
-            + EAGLE_EYE_DEVICE_ENDPOINT,
-            text=e_mock_camera_txt
-        )
+        self.e_mock_camera = setup_ee_camera_mock(
+            mock, self.c_mock_esession['activeBrandSubdomain'])
+
+        # Device list Mock
+        self.e_mock_device_list = setup_ee_device_list_mock(
+            mock, self.c_mock_esession['activeBrandSubdomain'])

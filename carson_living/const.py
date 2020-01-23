@@ -48,3 +48,4 @@ EAGLEEYE_SESSION_ENDPOINT = '/properties/buildings/{}/eagleeye/session/'
 # Beware URLs DO NOT end in '/', otherwise it returns a 500
 EAGLE_EYE_API_URI = 'https://{}.eagleeyenetworks.com'
 EAGLE_EYE_DEVICE_ENDPOINT = '/g/device'
+EAGLE_EYE_DEVICE_LIST_ENDPOINT = '/g/device/list'

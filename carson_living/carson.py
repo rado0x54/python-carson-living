@@ -4,8 +4,8 @@ import logging
 
 from carson_living.auth import CarsonAuth
 
-from carson_living.entities import (CarsonUser,
-                                    CarsonBuilding)
+from carson_living.carson_entities import (CarsonUser,
+                                           CarsonBuilding)
 from carson_living.const import (API_URI,
                                  ME_ENDPOINT)
 from carson_living.util import update_dictionary
@@ -74,4 +74,4 @@ class Carson(CarsonAuth):
             update_buildings,
             lambda p: CarsonBuilding(
                 self,
-                entity_payload=p))
+                p))
