@@ -157,8 +157,8 @@
       }
     ],
     "photo": {
-      "url": "https://via.placeholder.com/600/09f/fff.png",
-      "thumbnailUrl": "https://carson-assets.s3.amazonaws.com/photos/cd76ffe499030f1c16d364f75748cec3dd1eb304-thumbnail.png"
+      "url": "https://via.placeholder.com/600x600.png?text=Main+Image",
+      "thumbnailUrl": "https://via.placeholder.com/200x200.png?text=Thumbnail+Image"
     },
     "verified": true,
     "isAdmin": false,
