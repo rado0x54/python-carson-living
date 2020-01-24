@@ -1,4 +1,5 @@
 """Eagle Eye API Entities"""
+import shutil
 
 from carson_living.entities import _AbstractAPIEntity
 
@@ -234,6 +235,10 @@ tags: {tags}"""
         Returns:
             JPEG Image
         """
+        def _response_file_handler(response):
+            response.raw.decode_content = True
+            shutil.copyfileobj(response.raw, file)
+
         timestamp = 'now'
         if utc_dt is not None:
             timestamp = self.utc_to_een_timestamp(utc_dt)
@@ -243,4 +248,6 @@ tags: {tags}"""
         return self._api.authenticated_query(
             url, params={'id': self.entity_id,
                          'timestamp': timestamp,
-                         'asset_class': asset_class}, file=file)
+                         'asset_class': asset_class},
+            stream=True,
+            response_handler=_response_file_handler)

@@ -1,9 +1,7 @@
 """Basic Eagle Eye API Module"""
 import logging
-import shutil
+
 import requests
-
-
 from requests import HTTPError
 
 from carson_living.error import (CarsonError,
@@ -71,7 +69,8 @@ class EagleEye(object):
         self._session_brand_subdomain = brand_subdomain
 
     def authenticated_query(self, url, method='get', params=None,
-                            json=None, retry_auth=1, file=None, stream=None):
+                            json=None, retry_auth=1, stream=None,
+                            response_handler=lambda r: r.json()):
         """Perform an authenticated Query against Eagle Eye
 
         Args:
@@ -82,7 +81,7 @@ class EagleEye(object):
             params: the http params to use
             json: the json payload to submit
             retry_auth: number of query and reauthentication retries
-            file: optional file handler to stream the raw content
+            response_handler: optional file handler to stream the raw content
             stream: Stream the content
 
         Returns:
@@ -93,9 +92,6 @@ class EagleEye(object):
             CarsonAPIError: Response indicated an client or
             server-side API error.
         """
-        if file is not None:
-            stream = True
-
         if not self._session_auth_key \
                 or not self._session_brand_subdomain:
             self._update_session_auth_key()
@@ -117,19 +113,14 @@ class EagleEye(object):
                 url, retry_auth)
             self._session_auth_key = None
             return self.authenticated_query(
-                url, method, params, json, retry_auth - 1, file, stream)
+                url, method, params, json, retry_auth - 1,
+                stream, response_handler)
 
         try:
             response.raise_for_status()
+            return response_handler(response)
 
-            if file is not None:
-                response.raw.decode_content = True
-                shutil.copyfileobj(response.raw, file)
-                return file
-
-            return response.json()
-
-        except (ValueError, HTTPError) as error:
+        except HTTPError as error:
             raise CarsonAPIError(error)
 
     def update(self):

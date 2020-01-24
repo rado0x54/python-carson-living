@@ -11,7 +11,7 @@ from jwt import InvalidTokenError
 from carson_living.const import (BASE_HEADERS,
                                  API_URI,
                                  AUTH_ENDPOINT)
-from carson_living.util import handle_response_return_data
+from carson_living.util import default_carson_response_handler
 from carson_living.error import (CarsonAPIError,
                                  CarsonAuthenticationError,
                                  CarsonTokenError)
@@ -112,7 +112,7 @@ class CarsonAuth(object):
             headers=BASE_HEADERS
         )
         try:
-            data = handle_response_return_data(response)
+            data = default_carson_response_handler(response)
             self.token = data.get('token')
         except CarsonAPIError as error:
             raise CarsonAuthenticationError(error)
@@ -129,7 +129,8 @@ class CarsonAuth(object):
         return self._token_expiration_time > int(time.time())
 
     def authenticated_query(self, url, method='get', params=None,
-                            json=None, retry_auth=1):
+                            json=None, retry_auth=1,
+                            response_handler=default_carson_response_handler):
         """Perform an authenticated Query against Carson Living
 
         Args:
@@ -138,6 +139,7 @@ class CarsonAuth(object):
             params: the http params to use
             json: the json payload to submit
             retry_auth: number of query and reauthentication retries
+            response_handler: dynamic response handler for api
 
         Returns:
             The unwrapped data dict of the Carson Living response.
@@ -164,6 +166,7 @@ class CarsonAuth(object):
         if response.status_code == 401 and retry_auth > 0:
             self.token = None
             return self.authenticated_query(
-                url, method, params, json, retry_auth - 1)
+                url, method, params, json, retry_auth - 1,
+                response_handler)
 
-        return handle_response_return_data(response)
+        return response_handler(response)

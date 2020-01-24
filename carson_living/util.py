@@ -6,7 +6,7 @@ from carson_living.error import (CarsonAPIError,
 from carson_living.const import CARSON_RESPONSE
 
 
-def handle_response_return_data(response):
+def default_carson_response_handler(response):
     """Safely handle Carson API responses
 
     Args:
