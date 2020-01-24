@@ -3,7 +3,8 @@
 from carson_living.entities import _AbstractAPIEntity
 
 from carson_living.const import (EAGLE_EYE_API_URI,
-                                 EAGLE_EYE_DEVICE_ENDPOINT)
+                                 EAGLE_EYE_DEVICE_ENDPOINT,
+                                 EAGLE_EYE_GET_IMAGE_ENDPOINT)
 
 
 class EagleEyeCamera(_AbstractAPIEntity):
@@ -200,3 +201,46 @@ tags: {tags}"""
 
         """
         return self._entity_payload.get('bridges')
+
+    @staticmethod
+    def utc_to_een_timestamp(utc_dt):
+        """Convert utc_dt to EEN string
+
+        Note, no timezone conversion is performed, please make sure the
+        Datetime object is in UTC.
+
+        Args:
+            utc_dt: Datetime object in UTC
+
+        Returns: EEN timestamp format
+
+        """
+        return utc_dt.strftime('%Y%m%d%H%M%S.%f')[:-3]
+
+    def get_image(self, file,
+                  utc_dt=None, asset_ref='prev', asset_class='pre'):
+        """Get binary JPEG image from the camera
+
+        Args:
+            utc_dt:
+                Datetime object in UTC
+            asset_ref:
+                prev: previous image to time stamp
+                next: next image to timestamp (blocks)
+                asset: image at timestamp
+            asset_class:
+                all, pre, thumb
+
+        Returns:
+            JPEG Image
+        """
+        timestamp = 'now'
+        if utc_dt is not None:
+            timestamp = self.utc_to_een_timestamp(utc_dt)
+
+        url = EAGLE_EYE_API_URI + EAGLE_EYE_GET_IMAGE_ENDPOINT.format(
+            asset_ref)
+        return self._api.authenticated_query(
+            url, params={'id': self.entity_id,
+                         'timestamp': timestamp,
+                         'asset_class': asset_class}, file=file)

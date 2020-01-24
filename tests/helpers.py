@@ -7,15 +7,16 @@ import jwt
 
 from carson_living.const import (EAGLE_EYE_API_URI,
                                  EAGLE_EYE_DEVICE_ENDPOINT,
-                                 EAGLE_EYE_DEVICE_LIST_ENDPOINT)
+                                 EAGLE_EYE_DEVICE_LIST_ENDPOINT,
+                                 EAGLE_EYE_GET_IMAGE_ENDPOINT)
 from tests.const import TOKEN_PAYLOAD_TEMPLATE
 
 
-def load_fixture(folder, filename):
+def load_fixture(folder, filename, mode='r'):
     """Load a fixture."""
     path = os.path.join(os.path.dirname(__file__),
                         'fixtures', folder, filename)
-    with open(path) as fdp:
+    with open(path, mode) as fdp:
         return fdp.read()
 
 
@@ -88,3 +89,28 @@ def setup_ee_device_list_mock(mock, active_brand_subdomain,
     )
 
     return e_mock_list
+
+
+def setup_ee_image_mock(mock, active_brand_subdomain,
+                        filename='camera_image.jpeg',
+                        asset_ref='prev'):
+    """Setup a EE Device endpoint
+
+    Args:
+        mock: requests_mock mock
+        active_brand_subdomain: subdomain to replace in url
+        filename: binary image file to load
+        asset_ref: asset reff string in url
+
+    Returns: filename payload as json
+
+    """
+    binary_image = load_fixture(
+        'eagleeyenetworks.com', filename, 'rb')
+    mock.get(
+        EAGLE_EYE_API_URI.format(
+            active_brand_subdomain)
+        + EAGLE_EYE_GET_IMAGE_ENDPOINT.format(asset_ref),
+        content=binary_image
+    )
+    return binary_image

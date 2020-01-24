@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 """Carson API Module for Carson Living tests."""
+import io
+from datetime import datetime
 
 import requests_mock
 
 from carson_living import EagleEyeCamera
 
 from tests.test_base import CarsonUnitTestBase
-from tests.helpers import setup_ee_camera_mock
+from tests.helpers import (setup_ee_camera_mock,
+                           setup_ee_image_mock)
 
 
 class TestCamera(CarsonUnitTestBase):
@@ -79,3 +82,22 @@ class TestCamera(CarsonUnitTestBase):
         self.assertEqual(c_api.guid, c_payload.guid)
         self.assertEqual(c_api.tags, c_payload.tags)
         self.assertEqual(c_api.bridges, c_payload.bridges)
+
+    def test_een_timestamp_conversion(self):
+        """Test correct EEN conversion"""
+        sample_dt = datetime(2020, 1, 31, 23, 1, 3, 123456)
+        sample_dt_str = EagleEyeCamera.utc_to_een_timestamp(sample_dt)
+        self.assertEqual("20200131230103.123", sample_dt_str)
+
+    @requests_mock.Mocker()
+    def test_camera_get_image(self, mock):
+        """Load a fixture."""
+        subdomain = self.c_mock_esession['activeBrandSubdomain']
+        mock_image = setup_ee_image_mock(mock, subdomain)
+
+        first_camera = next(iter(self.first_building.cameras))
+
+        img_buffer = io.BytesIO()
+        first_camera.get_image(img_buffer)
+
+        self.assertEqual(mock_image, img_buffer.getvalue())

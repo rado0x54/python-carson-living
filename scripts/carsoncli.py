@@ -110,6 +110,11 @@ def main():
             print(door)
             _bar()
 
+        # download all images
+        for camera in building.cameras:
+            with open('image_{}.jpeg'.format(camera.entity_id), 'wb') as file:
+                camera.get_image(file)
+
     # Open all Unit Doors of Main Building
     # for door in carson.first_building.doors:
     #     if door.is_unit_door:
