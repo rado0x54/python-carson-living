@@ -57,6 +57,16 @@ Since Carson Living uses JWT token with very long validity, it is recommended to
 ``carson.token``, whenever one needs to reinitialize the API later on. The API library is robust to handle expired
 JWT tokens (and 401 handling), so no need to check before.
 
+Carson entities
+~~~~~~~~~~~~~~~
+The library currently supports the following entities and actions.
+
+- User (``carson.user``): read
+- Building (``carson.buildings``): read
+- Doors (``building.doors``): read, open
+- Cameras (``building.cameras``): read, images, video
+
+
 CLI Tool
 ~~~~~~~~
 Checkout ``./scripts/carsoncli.py`` for further API implementation examples.
@@ -90,8 +100,8 @@ The following is not supported by the API yet and remains TODO.
 - Expose delivery functionality (``/deliveries``)
 - Expose dashboard functionality (``/dashboard``)
 - Expose service functionality (``/service``)
-- Expand / Separate EagleEye API.
 - Integrate Twilio (``twilio/access-token/``)
+- Expand and extract EagleEye API (into separate project?).
 
 
 
