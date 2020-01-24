@@ -1,0 +1,26 @@
+{
+  "bridges": {
+    "BridgeId": "ATTD"
+  },
+  "camera_info_status_code": 200,
+  "name": "Camera Name 1",
+  "tags": [
+    "tag1",
+    "tag2"
+  ],
+  "is_sureview_enabled": 0,
+  "camera_parameters": {
+    "camera_parameters_key": "camera_parameters_value"
+  },
+  "utcOffset": -18000,
+  "sureview_email": "",
+  "camera_info": {
+    "camera_info_key": "camera_info_value"
+  },
+  "camera_parameters_status_code": 200,
+  "timezone": "US/Eastern",
+  "permissions": "AczGgfhMLNpSYsZ",
+  "guid": "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
+  "id": "c0",
+  "account_id": "00000001"
+}

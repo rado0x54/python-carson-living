@@ -2,8 +2,10 @@
 """Carson Living API Module."""
 import logging
 
-from carson_living.entities import (CarsonUser,
-                                    CarsonBuilding)
+from carson_living.auth import CarsonAuth
+
+from carson_living.carson_entities import (CarsonUser,
+                                           CarsonBuilding)
 from carson_living.const import (API_URI,
                                  ME_ENDPOINT)
 from carson_living.util import update_dictionary
@@ -13,18 +15,17 @@ _LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=useless-object-inheritance
-class Carson(object):
+class Carson(CarsonAuth):
     """A Python Abstraction object to the Carson Living API.
 
         Attributes:
-            _carson_auth: The Carson Authentication class to use
             _user: The authenticated user to Carson
             _buildings:
                 The building properties that are associated with
                 the current user
     """
-    def __init__(self, carson_auth):
-        self._carson_auth = carson_auth
+    def __init__(self, username, password, token=None):
+        super(Carson, self).__init__(username, password, token)
 
         self._user = None
         self._buildings = {}
@@ -37,6 +38,11 @@ class Carson(object):
         return self._buildings.values()
 
     @property
+    def first_building(self):
+        """Convenience Function to return first building in account"""
+        return next(iter(self.buildings))
+
+    @property
     def user(self):
         """The current authenticated user"""
         return self._user
@@ -45,8 +51,9 @@ class Carson(object):
         """Update entity list and individual entity parameters associated with the API
 
         """
+        _LOGGER.debug('Updating Carson Living API and associated entities')
         url = API_URI + ME_ENDPOINT
-        me_payload = self._carson_auth.authenticated_query(url)
+        me_payload = self.authenticated_query(url)
 
         self._update_user(me_payload)
         self._update_buildings(me_payload)
@@ -68,4 +75,4 @@ class Carson(object):
             update_buildings,
             lambda p: CarsonBuilding(
                 self,
-                entity_payload=p))
+                p))

@@ -14,6 +14,11 @@ from carson_living.error import (CarsonAuthenticationError,
                                  CarsonTokenError)
 
 from carson_living.eagleeye import EagleEye
+from carson_living.eagleeye_entities import EagleEyeCamera
+from carson_living.carson_entities import (CarsonDoor,
+                                           CarsonBuilding,
+                                           CarsonUser)
+
 
 __all__ = ['CarsonAuth',
            'Carson',
@@ -22,4 +27,8 @@ __all__ = ['CarsonAuth',
            'CarsonError',
            'CarsonCommunicationError',
            'CarsonTokenError',
-           'EagleEye']
+           'EagleEye',
+           'EagleEyeCamera',
+           'CarsonDoor',
+           'CarsonBuilding',
+           'CarsonUser']

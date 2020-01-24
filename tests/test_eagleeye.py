@@ -14,40 +14,81 @@ except ImportError:
 from carson_living import (EagleEye,
                            CarsonError)
 
+from tests.helpers import setup_ee_device_list_mock
+
 FIXTURE_SESSION_AUTH_KEY = 'sample_auth_key'
 FIXTURE_BRANDED_SUBDOMAIN = 'sd'
 
 
-class TestCarsonAuth(unittest.TestCase):
+class TestEagleEye(unittest.TestCase):
     """Carson Living authentication test class."""
+
+    def setUp(self):
+        with requests_mock.Mocker() as mock:
+            setup_ee_device_list_mock(mock, FIXTURE_BRANDED_SUBDOMAIN)
+
+            self.mock_session_callback = Mock(
+                return_value=(FIXTURE_SESSION_AUTH_KEY,
+                              FIXTURE_BRANDED_SUBDOMAIN))
+
+            self.eagle_eye = EagleEye(self.mock_session_callback)
+            self.eagle_eye.update()
+
+    def test_correct_initialization(self):
+        """Correct Initialization of EagleEye"""
+        self.mock_session_callback.assert_called_once_with()
+        self.assertEqual(8, len(self.eagle_eye.cameras))
 
     @requests_mock.Mocker()
     def test_authenticated_query(self, mock):
-        """Test Callback mechanism"""
-        mock_callback = Mock(
-            return_value=(FIXTURE_SESSION_AUTH_KEY, FIXTURE_BRANDED_SUBDOMAIN))
-
+        """Test basic authenticated query mechanism"""
         query_url = 'https://test.com'
         mock.get(query_url, text='{}')
 
-        eagle_eye = EagleEye(mock_callback)
-        eagle_eye.authenticated_query(query_url)
+        self.eagle_eye.authenticated_query(query_url)
 
-        mock_callback.assert_called_once_with()
         self.assertTrue(mock.called_once)
 
     @requests_mock.Mocker()
-    def test_authenticated_query_raises_callback_failure(self, mock):
+    def test_update_session_on_401(self, mock):
+        """Test Retry principle"""
+        query_url = 'https://test.com'
+        mock.get(query_url, status_code=401)
+
+        retries = 3
+
+        with self.assertRaises(CarsonError):
+            self.eagle_eye.authenticated_query(query_url, retry_auth=retries)
+
+        self.assertEqual(retries + 1, mock.call_count)
+        self.assertEqual(retries + 1, self.mock_session_callback.call_count)
+
+    @requests_mock.Mocker()
+    def test_initialization_with_bad_cb_raises_callback_failure(self, mock):
         """Test exception on faulty callback"""
         mock_callback = Mock(
             return_value=(FIXTURE_SESSION_AUTH_KEY, None))
 
-        query_url = 'https://test.com'
-        mock.get(query_url, text='{}')
-
-        eagle_eye = EagleEye(mock_callback)
+        broken_eagle_eye = EagleEye(mock_callback)
         with self.assertRaises(CarsonError):
-            eagle_eye.authenticated_query(query_url)
+            broken_eagle_eye.update()
 
         mock_callback.assert_called_once_with()
         self.assertEqual(0, mock.call_count)
+
+    @requests_mock.Mocker()
+    def test_api_updates_entities(self, mock):
+        """Test exception on faulty callback"""
+        mock_camera_update = setup_ee_device_list_mock(
+            mock, FIXTURE_BRANDED_SUBDOMAIN, 'device_list_update.json')
+        # mock_camera_update = setup_ee_camera_mock(
+        #     mock, FIXTURE_BRANDED_SUBDOMAIN, 'device_camera_update.json')
+
+        mock_camera_dict = {d[1]: d for d in mock_camera_update}
+
+        self.eagle_eye.update()
+
+        self.assertEqual(9, len(self.eagle_eye.cameras))
+        for camera in self.eagle_eye.cameras:
+            mock_camera = mock_camera_dict[camera.entity_id]
+            self.assertEqual(mock_camera[2], camera.name)
