@@ -39,8 +39,10 @@ Initialize a Carson API object
 
     # Initializing an API object
     carson = Carson("account@email.com", 'your password')
-    print(carson.user.first_name)
+    print(carson.user)
     # >> Martin
+    print(carson.token)
+    # >> ey...
 
 You are also able to pass a valid JWT token during initialization which would prevent a login action as long as the token is valid:
 
@@ -48,8 +50,12 @@ You are also able to pass a valid JWT token during initialization which would pr
 
     # Initializing an API object with a valid token
     carson = Carson("account@email.com", 'your password', 'ey....')
-    print(carson.user.first_name)
+    print(carson.token)
     # >> Martin
+
+Since Carson Living uses JWT token with very long validity, it is recommended to save the active token via
+``carson.token``, whenever one needs to reinitialize the API later on. The API library is robust to handle expired
+JWT tokens (and 401 handling), so no need to check before.
 
 CLI Tool
 ~~~~~~~~

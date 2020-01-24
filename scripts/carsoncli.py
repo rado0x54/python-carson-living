@@ -16,6 +16,7 @@ logging.basicConfig(
 def _header():
     _bar()
     print("Carson CLI")
+    _bar()
 
 
 def _bar():
@@ -86,7 +87,28 @@ def main():
 
     # connect to Carson Living account
     carson = Carson(args.username, args.password, args.token)
-    print(carson.user.first_name)
+    # print(carson.token)
+
+    # print some info
+    _bar()
+    print('Carson user info')
+    print(carson.user)
+    _bar()
+
+    for building in carson.buildings:
+        print('Carson building information')
+        print(building)
+        _bar()
+
+        for camera in building.cameras:
+            print('Eagle Eye camera information')
+            print(camera)
+            _bar()
+
+        for door in building.doors:
+            print('Carson door information')
+            print(door)
+            _bar()
 
     # Open all Unit Doors of Main Building
     # for door in carson.first_building.doors:

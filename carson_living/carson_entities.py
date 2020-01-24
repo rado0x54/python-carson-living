@@ -41,6 +41,23 @@ class CarsonBuilding(_AbstractAPIEntity):
         super(CarsonBuilding, self).__init__(api,
                                              entity_payload=entity_payload)
 
+    def __str__(self):
+        pattern = """\
+id: {entity_id}
+name: {name}
+number of cameras: {nr_cams}
+number of door: {nr_doors}
+number of units: {nr_units}
+pmc: {pmc_name}"""
+        return pattern.format(
+            entity_id=self.entity_id,
+            name=self.name,
+            nr_cams=len(self.cameras),
+            nr_doors=len(self.doors),
+            nr_units=len(self.units),
+            pmc_name=self.pmc_name
+        )
+
     @staticmethod
     def _get_eagleeye_session(carson_api, building_id):
         """Retrieve a new eagle eye auth key and subdomain information
@@ -76,26 +93,18 @@ class CarsonBuilding(_AbstractAPIEntity):
         self._update_doors()
 
     def _update_cameras(self):
+        # Only Support Eagle_Eye right now
         # Update existing via Eagle Eye.
         self._eagleeye.update()
 
-        # Only Support Eagle_Eye right now
+        # Cameras are managed by Eagle Eye API and
+        # Carson Living only contains filter view of
+        # Eagle Eye API
         self._cameras = {
             c['externalId']: self._eagleeye.get_camera(c['externalId'])
             for c in self.entity_payload.get('cameras')
             if c['provider'] == 'eagle_eye'
         }
-
-        # # Only Support Eagle_Eye right now
-        # update_cameras = {c['id']: c
-        #                   for c in self.entity_payload.get('cameras')
-        #                   if c['provider'] == 'eagle_eye'}
-        #
-        # update_dictionary(
-        #     self._cameras,
-        #     update_cameras,
-        #     lambda p: EagleEyeCamera(
-        #         self._eagleeye, p['externalId']))
 
     def _update_doors(self):
         update_doors = {d['id']: d for d in self.entity_payload.get('doors')}
@@ -287,6 +296,25 @@ class CarsonUser(_AbstractEntity):
     def entity_id(self):
         return self.entity_payload.get('id')
 
+    def __str__(self):
+        pattern = """\
+id: {entity_id}
+first name: {first_name}
+last name: {last_name}
+contact info: {contact_info}
+verified: {verfied}
+is_admin: {is_admin}"""
+        return pattern.format(
+            entity_id=self.entity_id,
+            first_name=self.first_name,
+            last_name=self.last_name,
+            contact_info=', '.join(
+                ['{}: {}'.format(c['type'], c['contact_info'])
+                 for c in self.contact_info]),
+            verfied=self.verified,
+            is_admin=self.is_admin
+        )
+
     @property
     def first_name(self):
         """First Name
@@ -384,6 +412,23 @@ class CarsonDoor(_AbstractAPIEntity):
     @property
     def entity_id(self):
         return self.entity_payload.get('id')
+
+    def __str__(self):
+        pattern = """\
+id: {entity_id}
+name: {name}
+provider: {provider}
+is_active: {is_active}
+is_unit_door: {is_unit_door}
+default_in_building: {default_in_building}"""
+        return pattern.format(
+            entity_id=self.entity_id,
+            name=self.name,
+            provider=self.provider,
+            is_active=self.is_active,
+            is_unit_door=self.is_unit_door,
+            default_in_building=self.default_in_building
+        )
 
     @property
     def name(self):

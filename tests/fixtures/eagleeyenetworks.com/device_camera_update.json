@@ -4,9 +4,6 @@
   },
   "camera_info_status_code": 200,
   "name": "Camera Name 1 Update",
-  "settings": {
-    "settings_key": "settings_value"
-  },
   "tags": [
     "tag1",
     "tag2"

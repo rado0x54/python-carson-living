@@ -32,11 +32,7 @@ class _AbstractEntity(object):
         self.update(entity_payload)
 
     def __repr__(self):
-        return '<Object {} with unique_entity_id {}>'.format(
-            self.__class__.__name__, self.unique_entity_id)
-
-    def __str__(self):
-        return '{} with unique id {}'.format(
+        return '{} with unique_entity_id {}'.format(
             self.__class__.__name__, self.unique_entity_id)
 
     @property

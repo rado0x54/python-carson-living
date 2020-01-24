@@ -107,6 +107,21 @@ class EagleEyeCamera(_AbstractAPIEntity):
     def entity_id(self):
         return self._entity_payload.get('id')
 
+    def __str__(self):
+        pattern = """\
+id: {entity_id}
+name: {name}
+account id: {account_id}
+guid: {guid}
+tags: {tags}"""
+        return pattern.format(
+            entity_id=self.entity_id,
+            name=self.name,
+            account_id=self.account_id,
+            guid=self.guid,
+            tags=', '.join(self.tags)
+        )
+
     @property
     def account_id(self):
         """Account id
@@ -124,15 +139,6 @@ class EagleEyeCamera(_AbstractAPIEntity):
 
         """
         return self._entity_payload.get('name')
-
-    @property
-    def settings(self):
-        """Settings
-
-        Returns: Json object of basic settings (location, motion regions, etc.)
-
-        """
-        return self._entity_payload.get('settings')
 
     @property
     def utc_offset(self):
