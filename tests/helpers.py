@@ -8,7 +8,8 @@ import jwt
 from carson_living.const import (EAGLE_EYE_API_URI,
                                  EAGLE_EYE_DEVICE_ENDPOINT,
                                  EAGLE_EYE_DEVICE_LIST_ENDPOINT,
-                                 EAGLE_EYE_GET_IMAGE_ENDPOINT)
+                                 EAGLE_EYE_GET_IMAGE_ENDPOINT,
+                                 EAGLE_EYE_GET_VIDEO_ENDPOINT)
 from tests.const import TOKEN_PAYLOAD_TEMPLATE
 
 
@@ -102,7 +103,7 @@ def setup_ee_image_mock(mock, active_brand_subdomain,
         filename: binary image file to load
         asset_ref: asset reff string in url
 
-    Returns: filename payload as json
+    Returns: filename payload as binary
 
     """
     binary_image = load_fixture(
@@ -114,3 +115,30 @@ def setup_ee_image_mock(mock, active_brand_subdomain,
         content=binary_image
     )
     return binary_image
+
+
+def setup_ee_video_mock(mock, active_brand_subdomain,
+                        video_format='flv',
+                        filename='camera_video.flv'):
+    """Setup a EE Device endpoint
+
+    Args:
+        mock: requests_mock mock
+        active_brand_subdomain: subdomain to replace in url
+        video_format: flv or mp4
+        filename: binary video file to load
+
+    Returns: filename payload as binary
+
+    """
+    binary_video = load_fixture(
+        'eagleeyenetworks.com', filename, 'rb')
+    mock.get(
+        EAGLE_EYE_API_URI.format(
+            active_brand_subdomain)
+        + EAGLE_EYE_GET_VIDEO_ENDPOINT.format(
+            video_format
+        ),
+        content=binary_video
+    )
+    return binary_video

@@ -2,6 +2,7 @@
 """Carson API Module for Carson Living tests."""
 import io
 from datetime import datetime
+from datetime import timedelta
 
 import requests_mock
 
@@ -9,7 +10,8 @@ from carson_living import EagleEyeCamera
 
 from tests.test_base import CarsonUnitTestBase
 from tests.helpers import (setup_ee_camera_mock,
-                           setup_ee_image_mock)
+                           setup_ee_image_mock,
+                           setup_ee_video_mock)
 
 
 class TestCamera(CarsonUnitTestBase):
@@ -91,13 +93,47 @@ class TestCamera(CarsonUnitTestBase):
 
     @requests_mock.Mocker()
     def test_camera_get_image(self, mock):
-        """Load a fixture."""
+        """Test get image function"""
         subdomain = self.c_mock_esession['activeBrandSubdomain']
         mock_image = setup_ee_image_mock(mock, subdomain)
 
         first_camera = next(iter(self.first_building.cameras))
 
-        img_buffer = io.BytesIO()
-        first_camera.get_image(img_buffer)
+        buffer = io.BytesIO()
+        first_camera.get_image(buffer)
 
-        self.assertEqual(mock_image, img_buffer.getvalue())
+        self.assertEqual(mock_image, buffer.getvalue())
+        self.assertEqual(1, mock.call_count)
+
+    @requests_mock.Mocker()
+    def test_camera_get_live_video(self, mock):
+        """Test get live video function"""
+        subdomain = self.c_mock_esession['activeBrandSubdomain']
+        mock_video = setup_ee_video_mock(mock, subdomain)
+
+        first_camera = next(iter(self.first_building.cameras))
+
+        buffer = io.BytesIO()
+        first_camera.get_video(buffer, timedelta(seconds=2))
+
+        self.assertEqual(mock_video, buffer.getvalue())
+        self.assertEqual(1, mock.call_count)
+        self.assertIn('stream_', mock.last_request.url)
+
+    @requests_mock.Mocker()
+    def test_camera_get_video(self, mock):
+        """Load a fixture."""
+        sample_dt = datetime(2020, 1, 24, 15, 1, 3, 123456)
+        subdomain = self.c_mock_esession['activeBrandSubdomain']
+        mock_video = setup_ee_video_mock(mock, subdomain, 'mp4')
+
+        first_camera = next(iter(self.first_building.cameras))
+
+        buffer = io.BytesIO()
+        first_camera.get_video(buffer, timedelta(seconds=30), sample_dt, 'mp4')
+
+        self.assertEqual(mock_video, buffer.getvalue())
+        self.assertEqual(1, mock.call_count)
+        self.assertIn('video.mp4', mock.last_request.url)
+        self.assertIn('=20200124150103.123', mock.last_request.url)
+        self.assertNotIn('stream_', mock.last_request.url)

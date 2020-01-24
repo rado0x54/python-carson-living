@@ -5,7 +5,13 @@ from carson_living.entities import _AbstractAPIEntity
 
 from carson_living.const import (EAGLE_EYE_API_URI,
                                  EAGLE_EYE_DEVICE_ENDPOINT,
-                                 EAGLE_EYE_GET_IMAGE_ENDPOINT)
+                                 EAGLE_EYE_GET_IMAGE_ENDPOINT,
+                                 EAGLE_EYE_GET_VIDEO_ENDPOINT)
+
+from carson_living.error import CarsonAPIError
+
+from carson_living.util import (current_milli_time,
+                                timedelta_to_milli_time)
 
 
 class EagleEyeCamera(_AbstractAPIEntity):
@@ -223,6 +229,8 @@ tags: {tags}"""
         """Get binary JPEG image from the camera
 
         Args:
+            file:
+                file handler that is written to.
             utc_dt:
                 Datetime object in UTC
             asset_ref:
@@ -249,5 +257,48 @@ tags: {tags}"""
             url, params={'id': self.entity_id,
                          'timestamp': timestamp,
                          'asset_class': asset_class},
+            stream=True,
+            response_handler=_response_file_handler)
+
+    # stream Live video to file
+    def get_video(self, file, length, utc_dt=None, video_format='flv'):
+        """Get a live video stream from the camera
+
+        Args:
+            file: file handler for the response
+            length: of the stream in timedelta
+            video_format: flv or mp4
+            utc_dt: utc timestamp for video, live otherwise
+
+        Returns:
+            FLV Live video stream
+        """
+        def _response_file_handler(response):
+            response.raw.decode_content = True
+            shutil.copyfileobj(response.raw, file)
+
+        # default are download parameters
+        time_millies = current_milli_time()
+        length_millies = timedelta_to_milli_time(length)
+
+        # Live case
+        start_timestamp = 'stream_{}'.format(time_millies)
+        end_timestamp = '+{}'.format(length_millies)
+
+        if utc_dt is None:
+            if video_format != 'flv':
+                raise CarsonAPIError(
+                    'Live video streaming is only possible with .flv')
+        else:
+            # Not live
+            start_timestamp = self.utc_to_een_timestamp(utc_dt)
+            end_timestamp = self.utc_to_een_timestamp(utc_dt + length)
+
+        url = EAGLE_EYE_API_URI + EAGLE_EYE_GET_VIDEO_ENDPOINT.format(
+            video_format)
+        return self._api.authenticated_query(
+            url, params={'id': self.entity_id,
+                         'start_timestamp': start_timestamp,
+                         'end_timestamp': end_timestamp},
             stream=True,
             response_handler=_response_file_handler)

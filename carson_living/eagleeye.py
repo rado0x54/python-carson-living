@@ -81,8 +81,8 @@ class EagleEye(object):
             params: the http params to use
             json: the json payload to submit
             retry_auth: number of query and reauthentication retries
-            response_handler: optional file handler to stream the raw content
             stream: Stream the content
+            response_handler: optional file handler to stream the raw content
 
         Returns:
             The json response object, or the file handler that was passed
