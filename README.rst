@@ -66,6 +66,53 @@ The library currently supports the following entities and actions.
 - Doors (``building.doors``): read, open
 - Cameras (``building.cameras``): read, images, video
 
+Door entities
+~~~~~~~~~~~~~
+Doors can be "buzzed" open via ``door.open()``
+
+.. code-block:: python
+
+    # Open all Unit Doors of Main Building
+    for door in carson.first_building.doors:
+        if door.is_unit_door:
+            print('Opening Unit Door {}'.format(door.name))
+            door.open()
+
+Camera entities
+~~~~~~~~~~~~~~~
+Eagle Eye cameras can produce live images and videos but also allow access to passed recordings (see API). The API can download the image and video directly into a provided file object
+or just pass a generated url with an eagle_eye auth key ``A=c000....``. Please note, that the url can only be accessed as long as the ``auth_key`` is valid. Therefore it may make sense to
+force the eagle eye api to refresh the auth key before generating a image or video url.
+
+1. Directly save a live image:
+
+.. code-block:: python
+
+        for camera in building.cameras:
+            with open('image_{}.jpeg'.format(camera.entity_id), 'wb') as file:
+                camera.get_image(file)
+
+2. Directly save a live video of 10s:
+
+.. code-block:: python
+
+        for camera in building.cameras:
+            with open('video_{}.flv'.format(camera.entity_id), 'wb') as file:
+                camera.get_video(file, timedelta(seconds=10))
+
+3. Directly download a image from a timestamp:
+
+.. code-block:: python
+
+    three_hours_ago = datetime.utcnow() - timedelta(hours=3)
+    # download all images from 3 hours ago
+    for camera in building.cameras:
+        with open('image_{}.jpeg'.format(camera.entity_id), 'wb') as file:
+            camera.get_image(file, three_hours_ago)
+
+4. Directly download a historic image from a timestamp:
+
+TODO.
 
 CLI Tool
 ~~~~~~~~

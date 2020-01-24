@@ -5,9 +5,9 @@ import getpass
 import argparse
 import logging
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 
-from carson_living import Carson
+from carson_living import Carson, CarsonAPIError
 
 
 logging.basicConfig(
@@ -112,16 +112,23 @@ def main():
             print(door)
             _bar()
 
-        # download all images
-        for camera in building.cameras:
-            with open('image_{}.jpeg'.format(camera.entity_id), 'wb') as file:
-                camera.get_image(file)
+        three_hours_ago = datetime.utcnow() - timedelta(hours=3)
+        # download all images from 3 hours ago
+        for cam in building.cameras:
+            with open('image_{}.jpeg'.format(cam.entity_id), 'wb') as file:
+                cam.get_image(file, three_hours_ago)
 
-        for camera in building.cameras:
-            with open('video_{}.flv'.format(camera.entity_id), 'wb') as file:
-                camera.get_video(file, timedelta(seconds=5))
+        try:
+            for cam in building.cameras:
+                with open('video_{}.flv'.format(cam.entity_id), 'wb') as file:
+                    cam.get_video(file, timedelta(seconds=5), three_hours_ago)
+        except CarsonAPIError as error:
+            # Somehow historic videos currently return
+            # 422 Client Error: Error generating keyframes.
+            print(error)
 
-    # Open all Unit Doors of Main Building
+    #
+    # # Open all Unit Doors of Main Building
     # for door in carson.first_building.doors:
     #     if door.is_unit_door:
     #         print('Opening Unit Door {}'.format(door.name))
