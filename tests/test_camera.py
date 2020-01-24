@@ -6,7 +6,9 @@ from datetime import timedelta
 
 import requests_mock
 
-from carson_living import EagleEyeCamera
+from carson_living import (EagleEyeCamera,
+                           CarsonAPIError)
+
 
 from tests.test_base import CarsonUnitTestBase
 from tests.helpers import (setup_ee_camera_mock,
@@ -104,6 +106,18 @@ class TestCamera(CarsonUnitTestBase):
 
         self.assertEqual(mock_image, buffer.getvalue())
         self.assertEqual(1, mock.call_count)
+        self.assertNotIn('A=', mock.last_request.url)
+
+    def test_camera_get_image_url(self):
+        """Test get image url function"""
+        first_camera = next(iter(self.first_building.cameras))
+
+        url = first_camera.get_image_url()
+
+        self.assertIn('id=', url)
+        self.assertIn('timestamp=', url)
+        self.assertIn('asset_class=', url)
+        self.assertIn('A=', url)
 
     @requests_mock.Mocker()
     def test_camera_get_live_video(self, mock):
@@ -119,10 +133,11 @@ class TestCamera(CarsonUnitTestBase):
         self.assertEqual(mock_video, buffer.getvalue())
         self.assertEqual(1, mock.call_count)
         self.assertIn('stream_', mock.last_request.url)
+        self.assertNotIn('A=', mock.last_request.url)
 
     @requests_mock.Mocker()
     def test_camera_get_video(self, mock):
-        """Load a fixture."""
+        """Test get video stream"""
         sample_dt = datetime(2020, 1, 24, 15, 1, 3, 123456)
         subdomain = self.c_mock_esession['activeBrandSubdomain']
         mock_video = setup_ee_video_mock(mock, subdomain, 'mp4')
@@ -137,3 +152,48 @@ class TestCamera(CarsonUnitTestBase):
         self.assertIn('video.mp4', mock.last_request.url)
         self.assertIn('=20200124150103.123', mock.last_request.url)
         self.assertNotIn('stream_', mock.last_request.url)
+        self.assertNotIn('A=', mock.last_request.url)
+
+    def test_camera_get_live_video_url(self):
+        """Test live video URL"""
+        first_camera = next(iter(self.first_building.cameras))
+
+        url_live = first_camera.get_video_url(timedelta(seconds=30))
+
+        self.assertIn('video.flv', url_live)
+        self.assertIn('id=', url_live)
+        self.assertIn('start_timestamp=stream_', url_live)
+        self.assertIn('end_timestamp=%2B', url_live)
+        self.assertIn('A=', url_live)
+
+    def test_camera_get_video_url(self):
+        """Test video URL"""
+        first_camera = next(iter(self.first_building.cameras))
+
+        sample_dt = datetime(2020, 1, 24, 15, 1, 3, 123456)
+        url = first_camera.get_video_url(
+            timedelta(seconds=30), sample_dt, 'mp4')
+
+        self.assertIn('video.mp4', url)
+        self.assertIn('id=', url)
+        self.assertIn('start_timestamp=', url)
+        self.assertIn('end_timestamp=', url)
+        self.assertNotIn('start_timestamp=stream_', url)
+        self.assertNotIn('end_timestamp=%2B', url)
+        self.assertIn('A=', url)
+
+    def test_camera_get_live_video_url_throws_mp4(self):
+        """Live video cannot be video_format mp4"""
+        first_camera = next(iter(self.first_building.cameras))
+
+        with self.assertRaises(CarsonAPIError):
+            first_camera.get_video_url(
+                timedelta(seconds=30), video_format='mp4')
+
+    def test_camera_get_live_video_throws_mp4(self):
+        """Live video cannot be video_format mp4"""
+        first_camera = next(iter(self.first_building.cameras))
+        buffer = io.BytesIO()
+
+        with self.assertRaises(CarsonAPIError):
+            first_camera.get_video(buffer, timedelta(seconds=2))

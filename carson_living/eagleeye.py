@@ -34,6 +34,16 @@ class EagleEye(object):
         self._cameras = {}
 
     @property
+    def session_auth_key(self):
+        """Current Auth Key"""
+        return self._session_auth_key
+
+    @property
+    def session_brand_subdomain(self):
+        """Current Brand Subdomain"""
+        return self._session_brand_subdomain
+
+    @property
     def cameras(self):
         """Get all cameras returned directly by the API"""
         return self._cameras.values()

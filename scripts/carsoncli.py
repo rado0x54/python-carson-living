@@ -119,7 +119,7 @@ def main():
 
         for camera in building.cameras:
             with open('video_{}.flv'.format(camera.entity_id), 'wb') as file:
-                camera.get_live_video(file, timedelta(seconds=2))
+                camera.get_video(file, timedelta(seconds=5))
 
     # Open all Unit Doors of Main Building
     # for door in carson.first_building.doors:

@@ -1,6 +1,9 @@
 """Eagle Eye API Entities"""
 import shutil
 
+from datetime import timedelta
+from requests import Request
+
 from carson_living.entities import _AbstractAPIEntity
 
 from carson_living.const import (EAGLE_EYE_API_URI,
@@ -121,13 +124,17 @@ id: {entity_id}
 name: {name}
 account id: {account_id}
 guid: {guid}
-tags: {tags}"""
+tags: {tags}
+live_image: {live_image_url}
+live_video: {live_video_url}"""
         return pattern.format(
             entity_id=self.entity_id,
             name=self.name,
             account_id=self.account_id,
             guid=self.guid,
-            tags=', '.join(self.tags)
+            tags=', '.join(self.tags),
+            live_image_url=self.get_image_url(),
+            live_video_url=self.get_video_url(timedelta(seconds=30))
         )
 
     @property
@@ -224,6 +231,27 @@ tags: {tags}"""
         """
         return utc_dt.strftime('%Y%m%d%H%M%S.%f')[:-3]
 
+    @staticmethod
+    def _get_video_timestamps(length, utc_dt, video_format):
+        # default are download parameters
+        time_millies = current_milli_time()
+        length_millies = timedelta_to_milli_time(length)
+
+        # Live case
+        start_ts = 'stream_{}'.format(time_millies)
+        end_ts = '+{}'.format(length_millies)
+
+        if utc_dt is None:
+            if video_format != 'flv':
+                raise CarsonAPIError(
+                    'Live video streaming is only possible with .flv')
+        else:
+            # Not live
+            start_ts = EagleEyeCamera.utc_to_een_timestamp(utc_dt)
+            end_ts = EagleEyeCamera.utc_to_een_timestamp(utc_dt + length)
+
+        return start_ts, end_ts
+
     def get_image(self, file,
                   utc_dt=None, asset_ref='prev', asset_class='pre'):
         """Get binary JPEG image from the camera
@@ -260,45 +288,98 @@ tags: {tags}"""
             stream=True,
             response_handler=_response_file_handler)
 
+    # Not this is quite duplicate at the moment, but a major refactor
+    # would be needed to return a prepared url via authenticated_query
+    def get_image_url(self, utc_dt=None,
+                      asset_ref='prev', asset_class='pre'):
+        """Get binary JPEG image from the camera
+
+        Args:
+            utc_dt:
+                Datetime object in UTC
+            asset_ref:
+                prev: previous image to time stamp
+                next: next image to timestamp (blocks)
+                asset: image at timestamp
+            asset_class:
+                all, pre, thumb
+
+        Returns:
+            JPEG Image
+        """
+
+        timestamp = 'now'
+        if utc_dt is not None:
+            timestamp = self.utc_to_een_timestamp(utc_dt)
+
+        url = EAGLE_EYE_API_URI.format(
+            self._api.session_brand_subdomain
+        ) + EAGLE_EYE_GET_IMAGE_ENDPOINT.format(
+            asset_ref
+        )
+
+        prepared = Request(url=url, params={
+            'id': self.entity_id,
+            'timestamp': timestamp,
+            'asset_class': asset_class,
+            'A': self._api.session_auth_key}).prepare()
+        return prepared.url
+
     # stream Live video to file
     def get_video(self, file, length, utc_dt=None, video_format='flv'):
-        """Get a live video stream from the camera
+        """Get a (live) video stream from the camera
 
         Args:
             file: file handler for the response
             length: of the stream in timedelta
             video_format: flv or mp4
-            utc_dt: utc timestamp for video, live otherwise
+            utc_dt: utc timestamp for video, live for None
 
         Returns:
-            FLV Live video stream
+            Video stream to file
         """
         def _response_file_handler(response):
             response.raw.decode_content = True
             shutil.copyfileobj(response.raw, file)
 
-        # default are download parameters
-        time_millies = current_milli_time()
-        length_millies = timedelta_to_milli_time(length)
-
-        # Live case
-        start_timestamp = 'stream_{}'.format(time_millies)
-        end_timestamp = '+{}'.format(length_millies)
-
-        if utc_dt is None:
-            if video_format != 'flv':
-                raise CarsonAPIError(
-                    'Live video streaming is only possible with .flv')
-        else:
-            # Not live
-            start_timestamp = self.utc_to_een_timestamp(utc_dt)
-            end_timestamp = self.utc_to_een_timestamp(utc_dt + length)
+        start_ts, end_ts = self._get_video_timestamps(
+            length, utc_dt, video_format)
 
         url = EAGLE_EYE_API_URI + EAGLE_EYE_GET_VIDEO_ENDPOINT.format(
             video_format)
         return self._api.authenticated_query(
             url, params={'id': self.entity_id,
-                         'start_timestamp': start_timestamp,
-                         'end_timestamp': end_timestamp},
+                         'start_timestamp': start_ts,
+                         'end_timestamp': end_ts},
             stream=True,
             response_handler=_response_file_handler)
+
+    # Not this is quite duplicate at the moment, but a major refactor
+    # would be needed to return a prepared url via authenticated_query
+    def get_video_url(self, length, utc_dt=None, video_format='flv'):
+        """Get a (live) video stream from the camera
+
+        Args:
+            file: file handler for the response
+            length: of the stream in timedelta
+            video_format: flv or mp4
+            utc_dt: utc timestamp for video, live for None
+
+        Returns:
+            Video url
+        """
+        start_ts, end_ts = self._get_video_timestamps(
+            length, utc_dt, video_format)
+
+        url = EAGLE_EYE_API_URI.format(
+            self._api.session_brand_subdomain
+        ) + EAGLE_EYE_GET_VIDEO_ENDPOINT.format(
+            video_format
+        )
+
+        prepared = Request(url=url, params={
+            'id': self.entity_id,
+            'start_timestamp': start_ts,
+            'end_timestamp': end_ts,
+            'A': self._api.session_auth_key}).prepare()
+        return prepared.url
