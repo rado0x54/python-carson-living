@@ -14,8 +14,7 @@ except ImportError:
 from carson_living import (EagleEye,
                            CarsonError)
 
-from tests.helpers import (setup_ee_device_list_mock,
-                           setup_ee_camera_mock)
+from tests.helpers import setup_ee_device_list_mock
 
 FIXTURE_SESSION_AUTH_KEY = 'sample_auth_key'
 FIXTURE_BRANDED_SUBDOMAIN = 'sd'
@@ -27,13 +26,13 @@ class TestEagleEye(unittest.TestCase):
     def setUp(self):
         with requests_mock.Mocker() as mock:
             setup_ee_device_list_mock(mock, FIXTURE_BRANDED_SUBDOMAIN)
-            setup_ee_camera_mock(mock, FIXTURE_BRANDED_SUBDOMAIN)
 
             self.mock_session_callback = Mock(
                 return_value=(FIXTURE_SESSION_AUTH_KEY,
                               FIXTURE_BRANDED_SUBDOMAIN))
 
             self.eagle_eye = EagleEye(self.mock_session_callback)
+            self.eagle_eye.update()
 
     def test_correct_initialization(self):
         """Correct Initialization of EagleEye"""
@@ -70,8 +69,9 @@ class TestEagleEye(unittest.TestCase):
         mock_callback = Mock(
             return_value=(FIXTURE_SESSION_AUTH_KEY, None))
 
+        broken_eagle_eye = EagleEye(mock_callback)
         with self.assertRaises(CarsonError):
-            EagleEye(mock_callback)
+            broken_eagle_eye.update()
 
         mock_callback.assert_called_once_with()
         self.assertEqual(0, mock.call_count)
@@ -79,14 +79,16 @@ class TestEagleEye(unittest.TestCase):
     @requests_mock.Mocker()
     def test_api_updates_entities(self, mock):
         """Test exception on faulty callback"""
-        setup_ee_device_list_mock(
+        mock_camera_update = setup_ee_device_list_mock(
             mock, FIXTURE_BRANDED_SUBDOMAIN, 'device_list_update.json')
-        mock_camera_update = setup_ee_camera_mock(
-            mock, FIXTURE_BRANDED_SUBDOMAIN, 'device_camera_update.json')
+        # mock_camera_update = setup_ee_camera_mock(
+        #     mock, FIXTURE_BRANDED_SUBDOMAIN, 'device_camera_update.json')
+
+        mock_camera_dict = {d[1]: d for d in mock_camera_update}
 
         self.eagle_eye.update()
 
         self.assertEqual(9, len(self.eagle_eye.cameras))
-
         for camera in self.eagle_eye.cameras:
-            self.assertEqual(mock_camera_update['name'], camera.name)
+            mock_camera = mock_camera_dict[camera.entity_id]
+            self.assertEqual(mock_camera[2], camera.name)

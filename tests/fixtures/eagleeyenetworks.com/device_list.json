@@ -1,29 +1,30 @@
 [
   [
-    "",
+    "00000001",
     "c0",
-    "",
+    "Camera Name 1",
     "camera",
     [
       [
-        "",
-        ""
+        "BridgeId",
+        "ATTD"
       ]
     ],
-    "",
-    "",
+    "ATTD",
+    "AczGgfhMLNpSYsZ",
     [
-      ""
+      "tag1",
+      "tag2"
     ],
-    "",
+    "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
     null,
+    1966143,
+    "US/Eastern",
+    -18000,
     0,
-    "",
+    "*127.0.0.1,[::1]",
     0,
-    0,
-    "",
-    0,
-    "",
+    "Owner Account Name",
     false,
     null,
     null,
@@ -42,33 +43,34 @@
     [],
     0,
     {},
-    ""
+    "20190503182953.000"
   ],
   [
-    "",
+    "00000001",
     "c1",
-    "",
+    "Camera Name 2",
     "camera",
     [
       [
-        "",
-        ""
+        "BridgeId",
+        "ATTD"
       ]
     ],
-    "",
-    "",
+    "ATTD",
+    "AczGgfhMLNpSYsZ",
     [
-      ""
+      "tag1",
+      "tag2"
     ],
-    "",
+    "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
     null,
+    1966143,
+    "US/Eastern",
+    -18000,
     0,
-    "",
+    "*127.0.0.1,[::1]",
     0,
-    0,
-    "",
-    0,
-    "",
+    "Owner Account Name",
     false,
     null,
     null,
@@ -87,33 +89,34 @@
     [],
     0,
     {},
-    ""
+    "20190503182953.000"
   ],
   [
-    "",
+    "00000001",
     "c2",
-    "",
+    "Camera Name 3",
     "camera",
     [
       [
-        "",
-        ""
+        "BridgeId",
+        "ATTD"
       ]
     ],
-    "",
-    "",
+    "ATTD",
+    "AczGgfhMLNpSYsZ",
     [
-      ""
+      "tag1",
+      "tag2"
     ],
-    "",
+    "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
     null,
+    1966143,
+    "US/Eastern",
+    -18000,
     0,
-    "",
+    "*127.0.0.1,[::1]",
     0,
-    0,
-    "",
-    0,
-    "",
+    "Owner Account Name",
     false,
     null,
     null,
@@ -132,33 +135,34 @@
     [],
     0,
     {},
-    ""
+    "20190503182953.000"
   ],
   [
-    "",
+    "00000001",
     "c3",
-    "",
+    "Camera Name 4",
     "camera",
     [
       [
-        "",
-        ""
+        "BridgeId",
+        "ATTD"
       ]
     ],
-    "",
-    "",
+    "ATTD",
+    "AczGgfhMLNpSYsZ",
     [
-      ""
+      "tag1",
+      "tag2"
     ],
-    "",
+    "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
     null,
+    1966143,
+    "US/Eastern",
+    -18000,
     0,
-    "",
+    "*127.0.0.1,[::1]",
     0,
-    0,
-    "",
-    0,
-    "",
+    "Owner Account Name",
     false,
     null,
     null,
@@ -177,33 +181,34 @@
     [],
     0,
     {},
-    ""
+    "20190503182953.000"
   ],
   [
-    "",
+    "00000001",
     "c4",
-    "",
+    "Camera Name 5",
     "camera",
     [
       [
-        "",
-        ""
+        "BridgeId",
+        "ATTD"
       ]
     ],
-    "",
-    "",
+    "ATTD",
+    "AczGgfhMLNpSYsZ",
     [
-      ""
+      "tag1",
+      "tag2"
     ],
-    "",
+    "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
     null,
+    1966143,
+    "US/Eastern",
+    -18000,
     0,
-    "",
+    "*127.0.0.1,[::1]",
     0,
-    0,
-    "",
-    0,
-    "",
+    "Owner Account Name",
     false,
     null,
     null,
@@ -222,33 +227,34 @@
     [],
     0,
     {},
-    ""
+    "20190503182953.000"
   ],
   [
-    "",
+    "00000001",
     "c5",
-    "",
+    "Camera Name 6",
     "camera",
     [
       [
-        "",
-        ""
+        "BridgeId",
+        "ATTD"
       ]
     ],
-    "",
-    "",
+    "ATTD",
+    "AczGgfhMLNpSYsZ",
     [
-      ""
+      "tag1",
+      "tag2"
     ],
-    "",
+    "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
     null,
+    1966143,
+    "US/Eastern",
+    -18000,
     0,
-    "",
+    "*127.0.0.1,[::1]",
     0,
-    0,
-    "",
-    0,
-    "",
+    "Owner Account Name",
     false,
     null,
     null,
@@ -267,33 +273,34 @@
     [],
     0,
     {},
-    ""
+    "20190503182953.000"
   ],
   [
-    "",
+    "00000001",
     "c6",
-    "",
+    "Camera Name 7",
     "camera",
     [
       [
-        "",
-        ""
+        "BridgeId",
+        "ATTD"
       ]
     ],
-    "",
-    "",
+    "ATTD",
+    "AczGgfhMLNpSYsZ",
     [
-      ""
+      "tag1",
+      "tag2"
     ],
-    "",
+    "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
     null,
+    1966143,
+    "US/Eastern",
+    -18000,
     0,
-    "",
+    "*127.0.0.1,[::1]",
     0,
-    0,
-    "",
-    0,
-    "",
+    "Owner Account Name",
     false,
     null,
     null,
@@ -312,33 +319,34 @@
     [],
     0,
     {},
-    ""
+    "20190503182953.000"
   ],
   [
-    "",
+    "00000001",
     "c7",
-    "",
+    "Camera Name 8",
     "camera",
     [
       [
-        "",
-        ""
+        "BridgeId",
+        "ATTD"
       ]
     ],
-    "",
-    "",
+    "ATTD",
+    "AczGgfhMLNpSYsZ",
     [
-      ""
+      "tag1",
+      "tag2"
     ],
-    "",
+    "7f7a4be4-24a8-488a-b9e3-bcdaeef7685f",
     null,
+    1966143,
+    "US/Eastern",
+    -18000,
     0,
-    "",
+    "*127.0.0.1,[::1]",
     0,
-    0,
-    "",
-    0,
-    "",
+    "Owner Account Name",
     false,
     null,
     null,
@@ -357,7 +365,7 @@
     [],
     0,
     {},
-    ""
+    "20190503182953.000"
   ],
   [
     "",

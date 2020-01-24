@@ -13,7 +13,6 @@ from carson_living.const import (API_URI,
 from tests.const import (USERNAME, PASSWORD)
 from tests.helpers import (load_fixture,
                            get_encoded_token,
-                           setup_ee_camera_mock,
                            setup_ee_device_list_mock)
 
 
@@ -55,10 +54,6 @@ class CarsonUnitTestBase(unittest.TestCase):
                 API_URI + EAGLEEYE_SESSION_ENDPOINT.format(b_id),
                 text=c_mock_esession_txt
             )
-
-        # Camera ID Mocks
-        self.e_mock_camera = setup_ee_camera_mock(
-            mock, self.c_mock_esession['activeBrandSubdomain'])
 
         # Device list Mock
         self.e_mock_device_list = setup_ee_device_list_mock(

@@ -3,8 +3,14 @@
 
 import getpass
 import argparse
+import logging
 
 from carson_living import Carson
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(levelname)s - %(message)s')
 
 
 def _header():
@@ -80,13 +86,13 @@ def main():
 
     # connect to Carson Living account
     carson = Carson(args.username, args.password, args.token)
-    print(carson.user)
+    print(carson.user.first_name)
 
     # Open all Unit Doors of Main Building
-    for door in carson.first_building.doors:
-        if door.is_unit_door:
-            print('Opening Unit Door {}'.format(door.name))
-            door.open()
+    # for door in carson.first_building.doors:
+    #     if door.is_unit_door:
+    #         print('Opening Unit Door {}'.format(door.name))
+    #         door.open()
 
     _bar()
 

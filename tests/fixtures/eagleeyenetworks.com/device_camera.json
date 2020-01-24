@@ -1,9 +1,9 @@
 {
   "bridges": {
-    "bridges_key": "bridges_value"
+    "BridgeId": "ATTD"
   },
   "camera_info_status_code": 200,
-  "name": "Camera",
+  "name": "Camera Name 1",
   "settings": {
     "settings_key": "settings_value"
   },

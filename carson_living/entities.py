@@ -25,7 +25,8 @@ class _AbstractEntity(object):
 
     def __init__(self, update_callback=None, entity_payload=None):
         self._update_callback = update_callback
-        self._entity_payload = entity_payload
+        # Note, entity_payload is written in self.update()
+        self._entity_payload = None
 
         # update internal representation
         self.update(entity_payload)
@@ -96,26 +97,23 @@ class _AbstractEntity(object):
                 was passes during initialization.
 
         """
-        if not self._update_callback and not entity_payload:
+        # If there is a entity_payload, use it over the callback.
+        if entity_payload:
+            self._entity_payload = entity_payload
+            # Allow child class to perform internal updates
+            self._internal_update()
+            return
+
+        if not self._update_callback:
             raise CarsonError(
                 'Trying to update entity {} without external payload '
                 'or a callback function'
                 .format(self.unique_entity_id))
 
-        # If there is a callback execute it (Priority over pass entity_payload)
-        if self._update_callback:
-            _LOGGER.info(
-                'Trying to updated entity %s from update callback',
-                self.unique_entity_id)
-            entity_payload = self._update_callback()
-
-        # There should be a entity_payload now, otherwise fail
-        if not entity_payload:
-            raise CarsonError(
-                'Trying to update {}, but no payload found set or returned'
-                .format(self.unique_entity_id))
-
-        self._entity_payload = entity_payload
+        _LOGGER.info(
+            'Trying to updated entity %s from update callback',
+            self.unique_entity_id)
+        self._entity_payload = self._update_callback()
 
         # Allow child class to perform internal updates
         self._internal_update()

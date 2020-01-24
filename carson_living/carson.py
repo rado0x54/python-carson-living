@@ -51,6 +51,7 @@ class Carson(CarsonAuth):
         """Update entity list and individual entity parameters associated with the API
 
         """
+        _LOGGER.debug('Updating Carson Living API and associated entities')
         url = API_URI + ME_ENDPOINT
         me_payload = self.authenticated_query(url)
 

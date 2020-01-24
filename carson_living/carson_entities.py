@@ -2,7 +2,6 @@
 
 from carson_living.entities import (_AbstractEntity,
                                     _AbstractAPIEntity)
-from carson_living.eagleeye_entities import EagleEyeCamera
 
 from carson_living.eagleeye import EagleEye
 
@@ -77,16 +76,26 @@ class CarsonBuilding(_AbstractAPIEntity):
         self._update_doors()
 
     def _update_cameras(self):
-        # Only Support Eagle_Eye right now
-        update_cameras = {c['id']: c
-                          for c in self.entity_payload.get('cameras')
-                          if c['provider'] == 'eagle_eye'}
+        # Update existing via Eagle Eye.
+        self._eagleeye.update()
 
-        update_dictionary(
-            self._cameras,
-            update_cameras,
-            lambda p: EagleEyeCamera(
-                self._eagleeye, p['externalId']))
+        # Only Support Eagle_Eye right now
+        self._cameras = {
+            c['externalId']: self._eagleeye.get_camera(c['externalId'])
+            for c in self.entity_payload.get('cameras')
+            if c['provider'] == 'eagle_eye'
+        }
+
+        # # Only Support Eagle_Eye right now
+        # update_cameras = {c['id']: c
+        #                   for c in self.entity_payload.get('cameras')
+        #                   if c['provider'] == 'eagle_eye'}
+        #
+        # update_dictionary(
+        #     self._cameras,
+        #     update_cameras,
+        #     lambda p: EagleEyeCamera(
+        #         self._eagleeye, p['externalId']))
 
     def _update_doors(self):
         update_doors = {d['id']: d for d in self.entity_payload.get('doors')}

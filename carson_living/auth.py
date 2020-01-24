@@ -88,7 +88,7 @@ class CarsonAuth(object):
             self._token_expiration_time = self._token_payload.get('exp')
 
             self._token = token
-            _LOGGER.info('Updated access Token for %s',
+            _LOGGER.info('Set access Token for %s',
                          self._token_payload.get('email', '<no e-mail found>'))
         except InvalidTokenError:
             raise CarsonTokenError('Cannot decode invalid token {}'
@@ -101,7 +101,7 @@ class CarsonAuth(object):
             CarsonAuthenticationError: On authentication error.
 
         """
-        _LOGGER.info('Getting access Token for %s', self._username)
+        _LOGGER.info('Getting new access Token for %s', self._username)
 
         response = requests.post(
             (API_URI + AUTH_ENDPOINT),

@@ -13,10 +13,47 @@ Carson Living Python API
 
 Python Carson Living is a library written in Python that exposes the carson.live devices as Python objects.
 
+Please note, that `Carson <https://carson.live>`_ does not provide an official API documentation, therefore this project
+is solely based on reverse engineering.
+
+Getting started
+---------------
 Installation
-------------
+~~~~~~~~~~~~~
 
 Carson Living Python should work against **Python 2.x >= 2.7** and **Python 3.x >= 3.5**.
+
+.. code-block::
+
+    # Installing from PyPi (TODO / Unsupported)
+    $ pip install carson_living
+
+    # Installing latest development
+    $ pip install \
+        git+https://github.com/rado0x54/python-carson-living@master
+
+Initialize a Carson API object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    # Initializing an API object
+    carson = Carson("account@email.com", 'your password')
+    print(carson.user.first_name)
+    # >> Martin
+
+You are also able to pass a valid JWT token during initialization which would prevent a login action as long as the token is valid:
+
+.. code-block:: python
+
+    # Initializing an API object with a valid token
+    carson = Carson("account@email.com", 'your password', 'ey....')
+    print(carson.user.first_name)
+    # >> Martin
+
+CLI Tool
+~~~~~~~~
+Checkout ``./scripts/carsoncli.py`` for further API implementation examples.
 
 Development Notes
 -----------------
@@ -37,6 +74,18 @@ The code follow the `Google Python Styleguide <https://google.github.io/stylegui
 Git Branching Strategy
 ~~~~~~~~~~~~~~~~~~~~~~
 This project uses `gitflow <https://nvie.com/posts/a-successful-git-branching-model/>`_ as a git branching model.
+
+Open Items
+~~~~~~~~~~
+The following is not supported by the API yet and remains TODO.
+
+- Expose visitor functionality (``/visitors``)
+- Expose thread / messaging functionality (``/threads``)
+- Expose delivery functionality (``/deliveries``)
+- Expose dashboard functionality (``/dashboard``)
+- Expose service functionality (``/service``)
+- Expand / Separate EagleEye API.
+- Integrate Twilio (``twilio/access-token/``)
 
 
 
