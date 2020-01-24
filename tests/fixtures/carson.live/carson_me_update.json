@@ -22,7 +22,7 @@
             "externalId": "c0",
             "staffOnly": false,
             "defaultInBuilding": true,
-            "liveViewId": "5511f001_update",
+            "liveViewId": "c0",
             "property": 3381,
             "doors": [
               21
@@ -39,7 +39,7 @@
             "externalId": "c2",
             "staffOnly": false,
             "defaultInBuilding": false,
-            "liveViewId": "100c7a1d_new",
+            "liveViewId": "c2",
             "property": 3381,
             "doors": [],
             "available": true,
@@ -54,7 +54,7 @@
             "externalId": "c3",
             "staffOnly": false,
             "defaultInBuilding": false,
-            "liveViewId": "100c7a1d_new",
+            "liveViewId": "c3",
             "property": 3381,
             "doors": [],
             "available": true,

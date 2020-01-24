@@ -22,7 +22,7 @@
             "externalId": "c0",
             "staffOnly": false,
             "defaultInBuilding": true,
-            "liveViewId": "5511f001",
+            "liveViewId": "c0",
             "property": 3381,
             "doors": [
               21
@@ -39,7 +39,7 @@
             "externalId": "c1",
             "staffOnly": false,
             "defaultInBuilding": false,
-            "liveViewId": "100c7a1d",
+            "liveViewId": "c1",
             "property": 3381,
             "doors": [
               23

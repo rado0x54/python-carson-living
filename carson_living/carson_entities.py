@@ -101,7 +101,7 @@ pmc: {pmc_name}"""
         # Carson Living only contains filter view of
         # Eagle Eye API
         self._cameras = {
-            c['externalId']: self._eagleeye.get_camera(c['externalId'])
+            c['liveViewId']: self._eagleeye.get_camera(c['liveViewId'])
             for c in self.entity_payload.get('cameras')
             if c['provider'] == 'eagle_eye'
         }
