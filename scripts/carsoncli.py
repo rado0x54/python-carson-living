@@ -7,6 +7,8 @@ import logging
 
 from datetime import timedelta, datetime
 
+import requests
+
 from carson_living import Carson, CarsonAPIError
 
 
@@ -112,16 +114,27 @@ def main():
             print(door)
             _bar()
 
-        three_hours_ago = datetime.utcnow() - timedelta(hours=3)
+        three_days_ago = datetime.utcnow() - timedelta(days=3)
         # download all images from 3 hours ago
+
+        # Update Session Auth Key of Eagle Eye once in a while if using
+        # generated authenticated URLs.
+        # Note, this is not needed for get_image() or get_video()
+        building.eagleeye_api.update_session_auth_key()
         for cam in building.cameras:
-            with open('image_{}.jpeg'.format(cam.entity_id), 'wb') as file:
-                cam.get_image(file, three_hours_ago)
+            img_url = cam.get_image_url(three_days_ago)
+            print(img_url)
+            response = requests.get(img_url)
+            with open('image_{}_with_url.jpeg'.format(
+                    cam.entity_id), 'wb') as file:
+                file.write(response.content)
+            # do only 1 cam.
+            break
 
         try:
             for cam in building.cameras:
                 with open('video_{}.flv'.format(cam.entity_id), 'wb') as file:
-                    cam.get_video(file, timedelta(seconds=5), three_hours_ago)
+                    cam.get_video(file, timedelta(seconds=5), three_days_ago)
         except CarsonAPIError as error:
             # Somehow historic videos currently return
             # 422 Client Error: Error generating keyframes.

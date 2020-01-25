@@ -60,7 +60,7 @@ class EagleEye(object):
         """
         return self._cameras.get(ee_id)
 
-    def _update_session_auth_key(self):
+    def update_session_auth_key(self):
         """Updates the internal session state via session_callback
 
         Raises:
@@ -104,7 +104,7 @@ class EagleEye(object):
         """
         if not self._session_auth_key \
                 or not self._session_brand_subdomain:
-            self._update_session_auth_key()
+            self.update_session_auth_key()
 
         headers = {'Cookie': 'auth_key={}'.format(self._session_auth_key)}
         headers.update(BASE_HEADERS)
