@@ -1,22 +1,25 @@
-sudo: false
 language: python
 python:
-  - '3.8'
-  - '3.7'
-  - '3.6'
-  - '3.5'
-  - '2.7'
-  - 'pypy'
-  - 'pypy3'
+  - 3.7
+  - 3.5
+  - 2.7
 
-# Lint is outside of the Matrix
 jobs:
   include:
+    - if: branch IN (master, develop)
+      python: 3.8
+    - if: branch IN (master, develop)
+      python: 3.6
+    - if: branch IN (master, develop)
+      python: pypy
+    - if: branch IN (master, develop)
+      python: pypy3
     - language: python
       python: 3.7
       name: "linting"
       script:
         - tox -e lint
+
 
 install: pip install -U tox coveralls
 
