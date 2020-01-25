@@ -25,8 +25,8 @@ cache: pip
 
 # Coverall and Lint only in 3.7
 after_success:
-  - if [ $TRAVIS_PYTHON_VERSION = 3.7 ]; then tox -e lint; fi
-  - if [ $TRAVIS_PYTHON_VERSION = 3.7 ]; then coveralls; fi
+  - test $TRAVIS_PYTHON_VERSION = 3.7 && tox -e lint
+  - test $TRAVIS_PYTHON_VERSION = 3.7 && coveralls
 
 deploy:
   # Test PYPI
