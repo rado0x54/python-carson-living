@@ -39,7 +39,7 @@ deploy:
     skip_existing: true
     on:
       branch: develop
-      condition: $TRAVIS_PYTHON_VERSION = 3.7 -o $TRAVIS_PYTHON_VERSION = 2.7
+      condition: $TRAVIS_PYTHON_VERSION == 3.7 || $TRAVIS_PYTHON_VERSION == 2.7
       repo: rado0x54/python-carson-living
   # Prod PYPI 3.7
   - provider: pypi
@@ -50,5 +50,5 @@ deploy:
     skip_existing: true
     on:
       tags: true
-      condition: $TRAVIS_PYTHON_VERSION = 3.7 -o $TRAVIS_PYTHON_VERSION = 2.7
+      condition: $TRAVIS_PYTHON_VERSION == 3.7 || $TRAVIS_PYTHON_VERSION == 2.7
       repo: rado0x54/python-carson-living
