@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """Collection of util functions"""
 
+import time
+
 from carson_living.error import (CarsonAPIError,
                                  CarsonCommunicationError)
 from carson_living.const import CARSON_RESPONSE
 
 
-def handle_response_return_data(response):
+def default_carson_response_handler(response):
     """Safely handle Carson API responses
 
     Args:
@@ -75,3 +77,13 @@ def update_dictionary(current_dict, update_dict, constructor):
     # Remove
     for i in existing_keys.difference(update_keys):
         del current_dict[i]
+
+
+def current_milli_time():
+    """Return the current time in milliseconds"""
+    return int(time.time() * 1000)
+
+
+def timedelta_to_milli_time(timedelta):
+    """Return the current time in milliseconds"""
+    return int(timedelta.total_seconds() * 1000)

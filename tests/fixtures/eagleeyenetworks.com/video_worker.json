@@ -1,0 +1,17 @@
+{
+  "status_code": 202,
+  "message": "AcceptedWorker",
+  "reason": "AcceptedWorker",
+  "data": {
+    "uuid": "70bc20cf-3218-44a5-b2fd-f554d6865453",
+    "name": "com.eencloud.svc-renderer.transcoder.mp4",
+    "urn": "com.eencloud.svc-renderer.transcoder.mp4?end_timestamp=20200124014606.149\u0026faststart=true\u0026id=c1\u0026start_timestamp=20200124014556.149\u0026timecode=false\u0026timecode_start_timestamp=19700101000000.000\u0026timecode_timezone=UTC\u0026watermark=false\u0026watermark_source=",
+    "status": "Initializing",
+    "error": null,
+    "meta": {
+      "x-een-svc-renderer-service-id": "9d92a2bc-40b3-59c7-610d-7572f3658d8b",
+      "x-een-svc-renderer-job-id": "99d92a2bc-40b3-59c7-610d-7572f3658d8b",
+      "x-een-svc-renderer-transcode-complete-ratio": "0.00"
+    }
+  }
+}

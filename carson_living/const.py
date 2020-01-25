@@ -32,11 +32,22 @@ BASE_HEADERS = {
 # code when item was not found
 # NOT_FOUND = -1
 
-# API endpoints
+# Carson API endpoints
+# Beware URLs end in '/', otherwise it returns a
+# HTTP/1.1 301 Moved Permanently to the correct version.
 API_VERSION = 'v1.4.1'
 API_URI = 'https://api.carson.live/api/' + API_VERSION
 
 AUTH_ENDPOINT = '/auth/login/'
 ME_ENDPOINT = '/me/'
 
+DOOR_OPEN_ENDPOINT = '/doors/{}/open/'
 EAGLEEYE_SESSION_ENDPOINT = '/properties/buildings/{}/eagleeye/session/'
+
+# Eagle Eye API endpoints
+# Beware URLs DO NOT end in '/', otherwise it returns a 500
+EAGLE_EYE_API_URI = 'https://{}.eagleeyenetworks.com'
+EAGLE_EYE_DEVICE_ENDPOINT = '/g/device'
+EAGLE_EYE_DEVICE_LIST_ENDPOINT = '/g/device/list'
+EAGLE_EYE_GET_IMAGE_ENDPOINT = '/asset/{}/image.jpeg'
+EAGLE_EYE_GET_VIDEO_ENDPOINT = '/asset/play/video.{}'

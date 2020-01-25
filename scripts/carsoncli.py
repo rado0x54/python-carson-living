@@ -3,12 +3,22 @@
 
 import getpass
 import argparse
-from carson_living import Carson, CarsonAuth
+import logging
+
+from datetime import timedelta, datetime
+
+from carson_living import Carson, CarsonAPIError
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(levelname)s - %(message)s')
 
 
 def _header():
     _bar()
     print("Carson CLI")
+    _bar()
 
 
 def _bar():
@@ -78,11 +88,51 @@ def main():
         args.password = getpass.getpass("Password: ")
 
     # connect to Carson Living account
-    auth = CarsonAuth(args.username, args.password, args.token)
-    Carson(auth)
+    carson = Carson(args.username, args.password, args.token)
+    # print(carson.token)
 
-    res = auth.authenticated_query('https://api.carson.live/api/v1.4.0/me/')
-    print(res)
+    # print some info
+    _bar()
+    print('Carson user info')
+    print(carson.user)
+    _bar()
+
+    for building in carson.buildings:
+        print('Carson building information')
+        print(building)
+        _bar()
+
+        for camera in building.cameras:
+            print('Eagle Eye camera information')
+            print(camera)
+            _bar()
+
+        for door in building.doors:
+            print('Carson door information')
+            print(door)
+            _bar()
+
+        three_hours_ago = datetime.utcnow() - timedelta(hours=3)
+        # download all images from 3 hours ago
+        for cam in building.cameras:
+            with open('image_{}.jpeg'.format(cam.entity_id), 'wb') as file:
+                cam.get_image(file, three_hours_ago)
+
+        try:
+            for cam in building.cameras:
+                with open('video_{}.flv'.format(cam.entity_id), 'wb') as file:
+                    cam.get_video(file, timedelta(seconds=5), three_hours_ago)
+        except CarsonAPIError as error:
+            # Somehow historic videos currently return
+            # 422 Client Error: Error generating keyframes.
+            print(error)
+
+    #
+    # # Open all Unit Doors of Main Building
+    # for door in carson.first_building.doors:
+    #     if door.is_unit_door:
+    #         print('Opening Unit Door {}'.format(door.name))
+    #         door.open()
 
     _bar()
 

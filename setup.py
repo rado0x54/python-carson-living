@@ -2,10 +2,11 @@
 """Python Carson Living setup script."""
 from setuptools import setup
 
-_VERSION = '0.1.0dev'
+_VERSION = '0.0.1'
 
 
 def readme():
+    """Pipe README.rst"""
     with open('README.rst') as desc:
         return desc.read()
 
@@ -14,7 +15,7 @@ setup(
     name='carson_living',
     packages=['carson_living'],
     version=_VERSION,
-    description='A Python library to communicate with ' +
+    description='A Python library to communicate with'
                 ' Carson Living Residences (https://www.carson.live/)',
     long_description=readme(),
     author='Martin Riedel',
@@ -23,7 +24,7 @@ setup(
     license='Apache License 2.0',
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     include_package_data=True,
-    install_requires=['requests', 'pytz'],
+    install_requires=['requests', 'pyjwt'],
     test_suite='tests',
     keywords=[
         'carson living',
@@ -40,6 +41,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Home Automation',
         'Topic :: Software Development :: Libraries :: Python Modules'
         ],

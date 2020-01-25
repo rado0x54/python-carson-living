@@ -19,10 +19,10 @@
             "buildingName": "122 Fake St",
             "name": "Camera 1",
             "provider": "eagle_eye",
-            "externalId": "142c7001",
+            "externalId": "c0",
             "staffOnly": false,
             "defaultInBuilding": true,
-            "liveViewId": "5511f001",
+            "liveViewId": "c0",
             "property": 3381,
             "doors": [
               21
@@ -36,10 +36,10 @@
             "buildingName": "122 Fake St",
             "name": "Camera 2",
             "provider": "eagle_eye",
-            "externalId": "5511f001",
+            "externalId": "c1",
             "staffOnly": false,
             "defaultInBuilding": false,
-            "liveViewId": "100c7a1d",
+            "liveViewId": "c1",
             "property": 3381,
             "doors": [
               23
@@ -157,8 +157,8 @@
       }
     ],
     "photo": {
-      "url": "https://via.placeholder.com/600/09f/fff.png",
-      "thumbnailUrl": "https://carson-assets.s3.amazonaws.com/photos/cd76ffe499030f1c16d364f75748cec3dd1eb304-thumbnail.png"
+      "url": "https://via.placeholder.com/600x600.png?text=Main+Image",
+      "thumbnailUrl": "https://via.placeholder.com/200x200.png?text=Thumbnail+Image"
     },
     "verified": true,
     "isAdmin": false,
