@@ -36,6 +36,7 @@ deploy:
       secure: m/iNGZX8iIdta1ko/0yTZ994hM6aJqiLcgen1Au/DwgFYAbh2AWCFyQNeghqn4KwG1+LSb4TQdpGWgrx3lB2dFnHIVrkSYC25OBelg+1gmCO+7VUOM3Ysyxy2Av/fjR2N0xqxCwepr2xl5hUc4wdm+hKkKj13vhClQuQkp8quz2iagAuOsIHja1uDmoVM4IPQg+KBtQA1HpQp1f2v/O/qW4bfJKHqbhEzVXS5LMoN7LUh3iBjwwolPsuGE/3MwB9YgGZvdSIAsS/Wyam/7i7pSg8HgnXnRH3jucNZ84fh/1bVunpmyP8ebO+lhrryukkRRap82Vb7oQLN82SGqwFiBZZ+2LqCD4z/UOg67+6ZvTx0R06aK1WMpIwSd+sY5ohBHPIDR645m9m/z5N7JHY5ydeUi6NxRVTJjkfTRzjowV427r9UFgGFP/qXBRcgxB36FhXMw8q8tsNnKkB3wvmxPN7RbCUyQG7In2TxBuXCHiHXAGAM6B70ktHc3wK0dtRZF0hqSIQIqUlKiHjjL/IkwdYo5Fg/26HszczqlD0ZSD0uJq4BxJjQQ5di7vcgyu9BcP9rDHIenFZXW+ccMSVx0GD6bAUCJT/+RwWa3YARPojDoaDv+FcKeMBTIQFeOsi7lYwxqFL28YiGfSjQnkFsVmeH91YG0dW7u7l+GBZGsk=
     server: https://test.pypi.org/legacy/
     distributions: "sdist bdist_wheel"
+    skip_existing: true
     on:
       python: 3.7
       repo: rado0x54/python-carson-living
