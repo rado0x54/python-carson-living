@@ -29,21 +29,23 @@ after_success:
   - if [ "$TRAVIS_PYTHON_VERSION" == "3.7" ]; then coveralls; fi
 
 deploy:
+  # Test PYPI
   - provider: pypi
     user: __token__
     password:
-      secure: XBESZHLqZ1LpfhQS4ecdTlNRFwGZ4VbUnc2PvhdCW9uBy5ZAIFWqMM9qJY1ShPu1KSFiK+tQwcSIah6g5Rq5JJHXS8ZEvUGKjFWpDhTyRb+0Lfw3rniPeSUyA3YMNp7TlEhPYKUW/my93t0NixI30IoqcoZZIoA0BSqprbwvCmIZTCMmOfFNdoLIJ3071n9cxk4f6PvIM1mmUV0+pIFGnufiDruHlURFK0tmIvHENr3oXfettvgadXLdJw6UW1i+Ij/EZzRfsxJ51S3aTSM8+x+75gPzgFvgQl/uQhgangbY3RzMHdy0lz1nt3dqPkAcs9bxiKMXZvjJl19z6rcg8sAxCZ9idXhyNnCksWrER6ATcJGELPN5bozOgciwVe9F7HvszB3yBnJ93Sk5HNEHKk9GwaZ+gvf5olE7+PSIEnG9/Y+8z/PFTd1FwwKuR2UpzeQbeZDEtE3bb7m7h7Nl1QNNwjhLhZfWNVs1LnXLlUNpKFimOrFbBey3xcEIXTL/xsiIcunjJYT5afHbucEoh4b3/5Yn3RuiP2O+RA7SL34CGbC4pyAIdeDldutaklCvadyw+Elk2dVeHmFALnrx3dMovibbiWmL8iiXjGr2nOkz12KvUjzn+zI+oJ8sn9cshcKbN1gT0ZMFfeOUBewV/+TED9TJzLYZret68AhZG2o=
+      secure: m/iNGZX8iIdta1ko/0yTZ994hM6aJqiLcgen1Au/DwgFYAbh2AWCFyQNeghqn4KwG1+LSb4TQdpGWgrx3lB2dFnHIVrkSYC25OBelg+1gmCO+7VUOM3Ysyxy2Av/fjR2N0xqxCwepr2xl5hUc4wdm+hKkKj13vhClQuQkp8quz2iagAuOsIHja1uDmoVM4IPQg+KBtQA1HpQp1f2v/O/qW4bfJKHqbhEzVXS5LMoN7LUh3iBjwwolPsuGE/3MwB9YgGZvdSIAsS/Wyam/7i7pSg8HgnXnRH3jucNZ84fh/1bVunpmyP8ebO+lhrryukkRRap82Vb7oQLN82SGqwFiBZZ+2LqCD4z/UOg67+6ZvTx0R06aK1WMpIwSd+sY5ohBHPIDR645m9m/z5N7JHY5ydeUi6NxRVTJjkfTRzjowV427r9UFgGFP/qXBRcgxB36FhXMw8q8tsNnKkB3wvmxPN7RbCUyQG7In2TxBuXCHiHXAGAM6B70ktHc3wK0dtRZF0hqSIQIqUlKiHjjL/IkwdYo5Fg/26HszczqlD0ZSD0uJq4BxJjQQ5di7vcgyu9BcP9rDHIenFZXW+ccMSVx0GD6bAUCJT/+RwWa3YARPojDoaDv+FcKeMBTIQFeOsi7lYwxqFL28YiGfSjQnkFsVmeH91YG0dW7u7l+GBZGsk=
     server: https://test.pypi.org/legacy/
-    skip_existing: true
+    distributions: "sdist bdist_wheel"
     on:
       python: 3.7
       repo: rado0x54/python-carson-living
-      branch: feature/setup-release-workflow
+      branch: develop
+  # Prod PYPI
   - provider: pypi
     user: __token__
     password:
-      secure: XBESZHLqZ1LpfhQS4ecdTlNRFwGZ4VbUnc2PvhdCW9uBy5ZAIFWqMM9qJY1ShPu1KSFiK+tQwcSIah6g5Rq5JJHXS8ZEvUGKjFWpDhTyRb+0Lfw3rniPeSUyA3YMNp7TlEhPYKUW/my93t0NixI30IoqcoZZIoA0BSqprbwvCmIZTCMmOfFNdoLIJ3071n9cxk4f6PvIM1mmUV0+pIFGnufiDruHlURFK0tmIvHENr3oXfettvgadXLdJw6UW1i+Ij/EZzRfsxJ51S3aTSM8+x+75gPzgFvgQl/uQhgangbY3RzMHdy0lz1nt3dqPkAcs9bxiKMXZvjJl19z6rcg8sAxCZ9idXhyNnCksWrER6ATcJGELPN5bozOgciwVe9F7HvszB3yBnJ93Sk5HNEHKk9GwaZ+gvf5olE7+PSIEnG9/Y+8z/PFTd1FwwKuR2UpzeQbeZDEtE3bb7m7h7Nl1QNNwjhLhZfWNVs1LnXLlUNpKFimOrFbBey3xcEIXTL/xsiIcunjJYT5afHbucEoh4b3/5Yn3RuiP2O+RA7SL34CGbC4pyAIdeDldutaklCvadyw+Elk2dVeHmFALnrx3dMovibbiWmL8iiXjGr2nOkz12KvUjzn+zI+oJ8sn9cshcKbN1gT0ZMFfeOUBewV/+TED9TJzLYZret68AhZG2o=
-    skip_existing: true
+      secure: p8maUDwhdIKEM6rbQnv3X4MNHu/ZNxUWVzDPgaMyoulUL+3itj6f1l1paPseSE+KJt/zbcByIB60EYP/k8NaklwmR/YpLrK2L6DU5E3v68YPcg1XaKBwG/7Wnx0w9QsWn39xR3/lE7RiLTLqPx/sqv7DY7QoT90LD4fufroR1/9sQVx0ociTIytcGE3J+K3iI/QimRZAskr75cgYpi0mQR6t4l0IEF6LEkr3y5vMcD5n2nVTW6XQXHdQvy2JhXiVHkHXWWfafERsuTUTm6h6z0/f/02O68W3yJvD/BFOnqTs3RAamff07Sf5Mb6jJj9Qi05aArRHuCkSqskiklTpgwEsOTrTaJb+wnVUJYiM2bqJCki8O0S7e67fA6I8wMXADjXeH4Y3pFDl7hltUupGgee+cnUIf87zXxczTz9Gweqh1pW2faMoXIiQ8tCdcx3V6B/CMIStlrLsTwDK+4MJIIkjkd1DwnBdN8K5OdX3HCdciPzAnkUm85OfgT75GgHlh4BWGJr0PnWnhd+PqyQvSymzVjiWXY/jiQgHVGRmA1vcoNeYlThvgXwtIbQ2cjukqqFGcgfStVaCVZAJO0kp6pfXCjR/BDuXKHvilL6s5cPN/UJO3Jr+TboTqxkuJFPrp4H4uQY3Imad9xRY49wXthHbspK5CutYHiIv/Co++vM=
+    distributions: "sdist bdist_wheel"
     on:
       tags: true
       python: 3.7
