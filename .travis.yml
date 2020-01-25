@@ -3,18 +3,26 @@ language: python
 matrix:
   fast_finish: true
   include:
-    - python: "2.7"
-      env: TOXENV=py27
-    - python: "3.5"
-      env: TOXENV=py35
-    - python: "3.6"
-      env: TOXENV=py36
-    - python: "3.7"
-      env: TOXENV=py37,lint
-    - python: "3.8"
-      env: TOXENV=py38
+  - python: '2.7'
+    env: TOXENV=py27
+  - python: '3.5'
+    env: TOXENV=py35
+  - python: '3.6'
+    env: TOXENV=py36
+  - python: '3.7'
+    env: TOXENV=py37,lint
+  - python: '3.8'
+    env: TOXENV=py38
 install: pip install -U tox coveralls
 script: tox
 cache: pip
 after_success: coveralls
-
+deploy:
+  provider: pypi
+  user: __token__
+  password:
+    secure: XBESZHLqZ1LpfhQS4ecdTlNRFwGZ4VbUnc2PvhdCW9uBy5ZAIFWqMM9qJY1ShPu1KSFiK+tQwcSIah6g5Rq5JJHXS8ZEvUGKjFWpDhTyRb+0Lfw3rniPeSUyA3YMNp7TlEhPYKUW/my93t0NixI30IoqcoZZIoA0BSqprbwvCmIZTCMmOfFNdoLIJ3071n9cxk4f6PvIM1mmUV0+pIFGnufiDruHlURFK0tmIvHENr3oXfettvgadXLdJw6UW1i+Ij/EZzRfsxJ51S3aTSM8+x+75gPzgFvgQl/uQhgangbY3RzMHdy0lz1nt3dqPkAcs9bxiKMXZvjJl19z6rcg8sAxCZ9idXhyNnCksWrER6ATcJGELPN5bozOgciwVe9F7HvszB3yBnJ93Sk5HNEHKk9GwaZ+gvf5olE7+PSIEnG9/Y+8z/PFTd1FwwKuR2UpzeQbeZDEtE3bb7m7h7Nl1QNNwjhLhZfWNVs1LnXLlUNpKFimOrFbBey3xcEIXTL/xsiIcunjJYT5afHbucEoh4b3/5Yn3RuiP2O+RA7SL34CGbC4pyAIdeDldutaklCvadyw+Elk2dVeHmFALnrx3dMovibbiWmL8iiXjGr2nOkz12KvUjzn+zI+oJ8sn9cshcKbN1gT0ZMFfeOUBewV/+TED9TJzLYZret68AhZG2o=
+  server: https://test.pypi.org/legacy/
+  skip_existing: true
+  on:
+    branch: feature/setup-release-workflow
