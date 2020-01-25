@@ -2,6 +2,9 @@
 Carson Living Python API
 ========================
 
+.. image:: https://badge.fury.io/py/carson-living.svg
+    :target: https://badge.fury.io/py/carson-living
+
 .. image:: https://travis-ci.org/rado0x54/python-carson-living.svg?branch=master
     :target: https://travis-ci.org/rado0x54/python-carson-living
 
@@ -10,6 +13,9 @@ Carson Living Python API
 
 .. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
     :target: https://opensource.org/licenses/Apache-2.0
+
+.. image:: https://img.shields.io/pypi/pyversions/carson-living.svg
+    :target: https://pypi.python.org/pypi/carson-living
 
 Python Carson Living is a library written in Python that exposes the carson.live devices as Python objects.
 
@@ -25,8 +31,8 @@ Carson Living Python should work against **Python 2.x >= 2.7** and **Python 3.x 
 
 .. code-block::
 
-    # Installing from PyPi (TODO / Unsupported)
-    $ pip install carson_living
+    # Installing from PyPi
+    $ pip install carson-living
 
     # Installing latest development
     $ pip install \
@@ -84,7 +90,7 @@ Eagle Eye cameras can produce live images and videos but also allow access to pa
 or just pass a generated url with an eagle_eye auth key ``A=c000....``. Please note, that the url can only be accessed as long as the ``auth_key`` is valid. Therefore it may make sense to
 force the eagle eye api to refresh the auth key before generating a image or video url.
 
-1. Directly save a live image:
+- Directly save a live image:
 
 .. code-block:: python
 
@@ -92,7 +98,7 @@ force the eagle eye api to refresh the auth key before generating a image or vid
             with open('image_{}.jpeg'.format(camera.entity_id), 'wb') as file:
                 camera.get_image(file)
 
-2. Directly save a live video of 10s:
+- Directly save a live video of 10s:
 
 .. code-block:: python
 
@@ -100,7 +106,7 @@ force the eagle eye api to refresh the auth key before generating a image or vid
             with open('video_{}.flv'.format(camera.entity_id), 'wb') as file:
                 camera.get_video(file, timedelta(seconds=10))
 
-3. Directly download a image from a timestamp:
+- Directly download a image from a timestamp:
 
 .. code-block:: python
 
@@ -110,9 +116,40 @@ force the eagle eye api to refresh the auth key before generating a image or vid
         with open('image_{}.jpeg'.format(camera.entity_id), 'wb') as file:
             camera.get_image(file, three_hours_ago)
 
-4. Directly download a historic image from a timestamp:
+- Directly download a recorded video from a timestamp:
 
-TODO.
+.. code-block:: python
+
+        three_days_ago = datetime.utcnow() - timedelta(days=3)
+        # download all videos from 3 days ago
+        for cam in building.cameras:
+            with open('video_{}.flv'.format(cam.entity_id), 'wb') as file:
+                cam.get_video(file, timedelta(seconds=5), three_days_ago)
+
+- The Carson API is also able to produce authenticated URLs that can be handled externally.
+  Please not, that the ``auth_key`` has a limited lifetime. Therefore it makes sense to update
+  the ``auth_key`` manually before retrieving predefined URLs. Note, the Eagle Eye API in Carson
+  is associated with a building, so it is sufficient to update it once for all cameras in the same
+  building. The function signature of the the ``_url`` function is identical to the previous ones
+  (minus the file object).
+
+.. code-block:: python
+
+        # Update Session Auth Key of Eagle Eye once in a while if using
+        # generated authenticated URLs.
+        # Note, this is not needed for get_image() or get_video()
+        building.eagleeye_api.update_session_auth_key()
+        for cam in building.cameras:
+            img_url = cam.get_image_url(three_days_ago)
+            print(img_url)
+            # >> https://cXXX.eagleeyenetworks.com/asset/prev/image.jpeg?id=c0&timestamp=20200122211442.575&asset_class=pre&A=c000~...
+            response = requests.get(img_url)
+            with open('image_{}_with_url.jpeg'.format(cam.entity_id), 'wb') as file:
+                file.write(response.content)
+            # do only 1 cam.
+            break
+
+Use ``cam.get_video_url()`` the same way.
 
 CLI Tool
 ~~~~~~~~
