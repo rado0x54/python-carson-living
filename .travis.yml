@@ -14,11 +14,6 @@ jobs:
       python: pypy
     - if: branch IN (master, develop)
       python: pypy3
-    - language: python
-      python: 3.7
-      name: "linting"
-      script:
-        - tox -e lint
 
 
 install: pip install -U tox coveralls
@@ -28,7 +23,10 @@ script:
 
 cache: pip
 
-after_success: coveralls
+# Coverall and Lint only in 3.7
+after_success:
+  - if [ "$TRAVIS_PYTHON_VERSION" == "3.7" ]; then tox -e lint; fi
+  - if [ "$TRAVIS_PYTHON_VERSION" == "3.7" ]; then coveralls; fi
 
 deploy:
   - provider: pypi
