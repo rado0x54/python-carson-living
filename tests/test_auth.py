@@ -32,6 +32,8 @@ class TestCarsonAuth(unittest.TestCase):
     def test_auth_init(self):
         """Test default class initialization"""
         auth = CarsonAuth(USERNAME, PASSWORD)
+
+        self.assertEqual(auth.username, USERNAME)
         self.assertIsNone(auth.token)
         self.assertIsNone(auth.token_payload)
         self.assertIsNone(auth.token_expiration_date)
@@ -52,6 +54,8 @@ class TestCarsonAuth(unittest.TestCase):
         mock_token_update_cb = Mock()
 
         auth = CarsonAuth(USERNAME, PASSWORD, token, mock_token_update_cb)
+
+        self.assertEqual(auth.username, USERNAME)
         self.assertEqual(auth.token, token)
         self.assertEqual(auth.token_payload, token_payload)
         self.assertEqual(auth.token_expiration_date, token_payload.get('exp'))
@@ -72,6 +76,7 @@ class TestCarsonAuth(unittest.TestCase):
                           token_update_cb=mock_token_update_cb)
         token = auth.update_token()
 
+        self.assertEqual(auth.username, USERNAME)
         self.assertEqual(FIXTURE_TOKEN, token)
         self.assertEqual(FIXTURE_TOKEN, auth.token)
         self.assertTrue(mock.called)
