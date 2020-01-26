@@ -101,7 +101,7 @@ class CarsonAuth(object):
             CarsonAuthenticationError: On authentication error.
 
         """
-        _LOGGER.info('Getting new access Token for %s', self._username)
+        _LOGGER.info('Getting new access token for %s', self._username)
 
         response = requests.post(
             (API_URI + AUTH_ENDPOINT),
@@ -114,7 +114,9 @@ class CarsonAuth(object):
         try:
             data = default_carson_response_handler(response)
             self.token = data.get('token')
+            return self.token
         except CarsonAPIError as error:
+            _LOGGER.warning('Authentication for %s failed', self._username)
             raise CarsonAuthenticationError(error)
 
     def valid_token(self):

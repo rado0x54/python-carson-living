@@ -56,8 +56,9 @@ class TestCarsonAuth(unittest.TestCase):
                   text=load_fixture('carson.live', 'carson_login.json'))
 
         auth = CarsonAuth(USERNAME, PASSWORD)
-        auth.update_token()
+        token = auth.update_token()
 
+        self.assertEqual(FIXTURE_TOKEN, token)
         self.assertEqual(FIXTURE_TOKEN, auth.token)
         self.assertTrue(mock.called)
         self.assertEqual(USERNAME,
