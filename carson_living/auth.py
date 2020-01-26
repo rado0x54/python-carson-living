@@ -32,17 +32,35 @@ class CarsonAuth(object):
         _token: current JWT token
         _token_payload: current JWT token payload
         _token_expiration_time: current JWT token expiration time
+        _token_update_cb:
+            gets executed whenever the token gets update to a
+            non-None value.
     """
 
-    def __init__(self, username, password, token=None):
+    def __init__(self, username, password,
+                 initial_token=None, token_update_cb=None):
         self._username = username
         self._password = password
         self._token = None
         self._token_payload = None
         self._token_expiration_time = None
+        self._token_update_cb = None
 
         # Set and init token values
-        self.token = token
+        self.token = initial_token
+
+        # Set token updater after initial token (so it does not fire)
+        self._token_update_cb = token_update_cb
+
+    @property
+    def username(self):
+        """Username
+
+        Returns:
+            the configured username
+
+        """
+        return self._username
 
     @property
     def token(self):
@@ -88,6 +106,9 @@ class CarsonAuth(object):
             self._token_expiration_time = self._token_payload.get('exp')
 
             self._token = token
+
+            if self._token_update_cb is not None:
+                self._token_update_cb(token)
             _LOGGER.info('Set access Token for %s',
                          self._token_payload.get('email', '<no e-mail found>'))
         except InvalidTokenError:
@@ -101,7 +122,7 @@ class CarsonAuth(object):
             CarsonAuthenticationError: On authentication error.
 
         """
-        _LOGGER.info('Getting new access Token for %s', self._username)
+        _LOGGER.info('Getting new access token for %s', self._username)
 
         response = requests.post(
             (API_URI + AUTH_ENDPOINT),
@@ -114,7 +135,9 @@ class CarsonAuth(object):
         try:
             data = default_carson_response_handler(response)
             self.token = data.get('token')
+            return self.token
         except CarsonAPIError as error:
+            _LOGGER.warning('Authentication for %s failed', self._username)
             raise CarsonAuthenticationError(error)
 
     def valid_token(self):
