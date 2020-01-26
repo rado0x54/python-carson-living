@@ -32,17 +32,35 @@ class CarsonAuth(object):
         _token: current JWT token
         _token_payload: current JWT token payload
         _token_expiration_time: current JWT token expiration time
+        _token_update_cb:
+            gets executed whenever the token gets update to a
+            non-None value.
     """
 
-    def __init__(self, username, password, token=None):
+    def __init__(self, username, password,
+                 initial_token=None, token_update_cb=None):
         self._username = username
         self._password = password
         self._token = None
         self._token_payload = None
         self._token_expiration_time = None
+        self._token_update_cb = None
 
         # Set and init token values
-        self.token = token
+        self.token = initial_token
+
+        # Set token updater after initial token (so it does not fire)
+        self._token_update_cb = token_update_cb
+
+    @property
+    def username(self):
+        """Username
+
+        Returns:
+            the configured username
+
+        """
+        return self._username
 
     @property
     def token(self):
@@ -88,6 +106,9 @@ class CarsonAuth(object):
             self._token_expiration_time = self._token_payload.get('exp')
 
             self._token = token
+
+            if self._token_update_cb is not None:
+                self._token_update_cb(token)
             _LOGGER.info('Set access Token for %s',
                          self._token_payload.get('email', '<no e-mail found>'))
         except InvalidTokenError:

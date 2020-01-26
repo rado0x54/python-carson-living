@@ -23,3 +23,6 @@ disable=
 reports=no
 
 [EXCEPTIONS]
+
+[SIMILARITIES]
+ignore-imports=yes

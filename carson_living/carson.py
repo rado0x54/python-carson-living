@@ -24,8 +24,10 @@ class Carson(CarsonAuth):
                 The building properties that are associated with
                 the current user
     """
-    def __init__(self, username, password, token=None):
-        super(Carson, self).__init__(username, password, token)
+    def __init__(self, username, password,
+                 initial_token=None, token_update_cb=None):
+        super(Carson, self).__init__(username, password,
+                                     initial_token, token_update_cb)
 
         self._user = None
         self._buildings = {}
