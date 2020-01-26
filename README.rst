@@ -32,7 +32,7 @@ Carson Living Python should work against **Python 2.x >= 2.7** and **Python 3.x 
 .. code-block::
 
     # Installing from PyPi
-    $ pip install carson-living
+    $ pip install carson_living
 
     # Installing latest development
     $ pip install \

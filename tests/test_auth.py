@@ -4,6 +4,12 @@
 import unittest
 import requests_mock
 
+# 2.7 support fallback
+try:
+    from unittest.mock import Mock
+except ImportError:
+    from mock import Mock
+
 from carson_living import (CarsonAuth,
                            CarsonAPIError,
                            CarsonTokenError,
@@ -26,6 +32,8 @@ class TestCarsonAuth(unittest.TestCase):
     def test_auth_init(self):
         """Test default class initialization"""
         auth = CarsonAuth(USERNAME, PASSWORD)
+
+        self.assertEqual(auth.username, USERNAME)
         self.assertIsNone(auth.token)
         self.assertIsNone(auth.token_payload)
         self.assertIsNone(auth.token_expiration_date)
@@ -43,11 +51,18 @@ class TestCarsonAuth(unittest.TestCase):
         """Test default class initialization with token"""
         token, token_payload = get_encoded_token()
 
-        auth = CarsonAuth(USERNAME, PASSWORD, token)
+        mock_token_update_cb = Mock()
+
+        auth = CarsonAuth(USERNAME, PASSWORD, token, mock_token_update_cb)
+
+        self.assertEqual(auth.username, USERNAME)
         self.assertEqual(auth.token, token)
         self.assertEqual(auth.token_payload, token_payload)
         self.assertEqual(auth.token_expiration_date, token_payload.get('exp'))
         self.assertTrue(auth.valid_token())
+
+        # make sure that token update cb is not executed with an initial token.
+        mock_token_update_cb.assert_not_called()
 
     @requests_mock.Mocker()
     def test_update_token_success(self, mock):
@@ -55,15 +70,21 @@ class TestCarsonAuth(unittest.TestCase):
         mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
                   text=load_fixture('carson.live', 'carson_login.json'))
 
-        auth = CarsonAuth(USERNAME, PASSWORD)
-        auth.update_token()
+        mock_token_update_cb = Mock()
 
+        auth = CarsonAuth(USERNAME, PASSWORD,
+                          token_update_cb=mock_token_update_cb)
+        token = auth.update_token()
+
+        self.assertEqual(auth.username, USERNAME)
+        self.assertEqual(FIXTURE_TOKEN, token)
         self.assertEqual(FIXTURE_TOKEN, auth.token)
         self.assertTrue(mock.called)
         self.assertEqual(USERNAME,
                          mock.last_request.json().get('username'))
         self.assertEqual(PASSWORD,
                          mock.last_request.json().get('password'))
+        mock_token_update_cb.assert_called_once_with(FIXTURE_TOKEN)
 
     @requests_mock.Mocker()
     def test_update_token_fail(self, mock):

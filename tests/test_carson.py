@@ -67,6 +67,13 @@ class TestCarson(CarsonUnitTestBase):
             self.c_mock_me['isService'],
             user.is_service)
 
+        self.assertIn(str(user.entity_id), str(user))
+        self.assertIn(user.first_name, str(user))
+        self.assertIn(user.last_name, str(user))
+
+        self.assertIn(user.unique_entity_id, repr(user))
+        self.assertIn("CarsonUser", repr(user))
+
     def test_api_buildings_initialization(self):
         """Test correct buildings entities after initialization"""
         buildings = self.carson.buildings
@@ -142,6 +149,18 @@ class TestCarson(CarsonUnitTestBase):
         # Eagle Eye API returns 8 cameras
         self.assertIsNotNone(self.first_building.eagleeye_api)
         self.assertEqual(8, len(self.first_building.eagleeye_api.cameras))
+
+        self.assertIn(str(self.first_building.entity_id),
+                      str(self.first_building))
+        self.assertIn(self.first_building.name,
+                      str(self.first_building))
+        self.assertIn(self.first_building.pmc_name,
+                      str(self.first_building))
+
+        self.assertIn(self.first_building.unique_entity_id,
+                      repr(self.first_building))
+        self.assertIn("CarsonBuilding",
+                      repr(self.first_building))
 
     @requests_mock.Mocker()
     def test_later_carson_update_changes_entities(self, mock):
