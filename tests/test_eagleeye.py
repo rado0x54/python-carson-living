@@ -95,8 +95,13 @@ class TestEagleEye(unittest.TestCase):
 
     def test_check_auth_false_on_empty_auth_key(self):
         """Correct Initialization of EagleEye"""
-        auth = self.eagle_eye.check_auth(refresh=False)
+        mock_session_callback = Mock()
+
+        eagle_eye = EagleEye(mock_session_callback)
+
+        auth = eagle_eye.check_auth(refresh=False)
         self.assertEqual(False, auth)
+        mock_session_callback.assert_not_called()
 
     @requests_mock.Mocker()
     def test_check_auth_auto_refreshes(self, mock):

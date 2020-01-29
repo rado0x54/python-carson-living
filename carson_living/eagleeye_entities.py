@@ -1,7 +1,6 @@
 """Eagle Eye API Entities"""
 import shutil
 
-from datetime import timedelta
 from requests import Request
 
 from carson_living.entities import _AbstractAPIEntity
@@ -127,17 +126,13 @@ id: {entity_id}
 name: {name}
 account id: {account_id}
 guid: {guid}
-tags: {tags}
-live_image: {live_image_url}
-live_video: {live_video_url}"""
+tags: {tags}"""
         return pattern.format(
             entity_id=self.entity_id,
             name=self.name,
             account_id=self.account_id,
             guid=self.guid,
-            tags=', '.join(self.tags),
-            live_image_url=self.get_image_url(),
-            live_video_url=self.get_video_url(timedelta(seconds=30))
+            tags=', '.join(self.tags)
         )
 
     @property
