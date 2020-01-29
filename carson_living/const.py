@@ -35,19 +35,33 @@ BASE_HEADERS = {
 # Carson API endpoints
 # Beware URLs end in '/', otherwise it returns a
 # HTTP/1.1 301 Moved Permanently to the correct version.
-API_VERSION = 'v1.4.1'
-API_URI = 'https://api.carson.live/api/' + API_VERSION
+C_API_VERSION = 'v1.4.1'
+C_API_URI = 'https://api.carson.live/api/' + C_API_VERSION
 
-AUTH_ENDPOINT = '/auth/login/'
-ME_ENDPOINT = '/me/'
+C_AUTH_ENDPOINT = '/auth/login/'
+C_ME_ENDPOINT = '/me/'
 
-DOOR_OPEN_ENDPOINT = '/doors/{}/open/'
-EAGLEEYE_SESSION_ENDPOINT = '/properties/buildings/{}/eagleeye/session/'
+C_DOOR_OPEN_ENDPOINT = '/doors/{}/open/'
+C_EEN_SESSION_ENDPOINT = '/properties/buildings/{}/eagleeye/session/'
 
 # Eagle Eye API endpoints
 # Beware URLs DO NOT end in '/', otherwise it returns a 500
-EAGLE_EYE_API_URI = 'https://{}.eagleeyenetworks.com'
-EAGLE_EYE_DEVICE_ENDPOINT = '/g/device'
-EAGLE_EYE_DEVICE_LIST_ENDPOINT = '/g/device/list'
-EAGLE_EYE_GET_IMAGE_ENDPOINT = '/asset/{}/image.jpeg'
-EAGLE_EYE_GET_VIDEO_ENDPOINT = '/asset/play/video.{}'
+EEN_API_URI = 'https://{}.eagleeyenetworks.com'
+EEN_DEVICE_ENDPOINT = '/g/device'
+EEN_DEVICE_LIST_ENDPOINT = '/g/device/list'
+EEN_GET_IMAGE_ENDPOINT = '/asset/{}/image.jpeg'
+EEN_GET_VIDEO_ENDPOINT = '/asset/play/video.{}'
+EEN_IS_AUTH_ENDPOINT = '/g/aaa/isauth'
+
+# Eagle Eye Network Interface options
+EEN_ASSET_REF_ASSET = 'asset'
+EEN_ASSET_REF_PREV = 'prev'
+EEN_ASSET_REF_NEXT = 'next'
+EEN_ASSET_REF_AFTER = 'after'
+
+EEN_ASSET_CLS_ALL = 'all'
+EEN_ASSET_CLS_PRE = 'pre'
+EEN_ASSET_CLS_THUMB = 'thumb'
+
+EEN_VIDEO_FORMAT_FLV = 'flv'
+EEN_VIDEO_FORMAT_MP4 = 'mp4'

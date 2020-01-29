@@ -2,7 +2,7 @@
 """Python Carson Living setup script."""
 from setuptools import setup
 
-_VERSION = '0.0.3'
+_VERSION = '0.0.4'
 
 
 def readme():

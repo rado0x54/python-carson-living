@@ -9,8 +9,8 @@ from jwt import InvalidTokenError
 
 
 from carson_living.const import (BASE_HEADERS,
-                                 API_URI,
-                                 AUTH_ENDPOINT)
+                                 C_API_URI,
+                                 C_AUTH_ENDPOINT)
 from carson_living.util import default_carson_response_handler
 from carson_living.error import (CarsonAPIError,
                                  CarsonAuthenticationError,
@@ -125,7 +125,7 @@ class CarsonAuth(object):
         _LOGGER.info('Getting new access token for %s', self._username)
 
         response = requests.post(
-            (API_URI + AUTH_ENDPOINT),
+            (C_API_URI + C_AUTH_ENDPOINT),
             json={
                 'username': self._username,
                 'password': self._password,

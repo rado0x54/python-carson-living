@@ -19,6 +19,16 @@ from carson_living.carson_entities import (CarsonDoor,
                                            CarsonBuilding,
                                            CarsonUser)
 
+from carson_living.const import (EEN_ASSET_REF_ASSET,
+                                 EEN_ASSET_REF_PREV,
+                                 EEN_ASSET_REF_NEXT,
+                                 EEN_ASSET_REF_AFTER,
+                                 EEN_ASSET_CLS_ALL,
+                                 EEN_ASSET_CLS_PRE,
+                                 EEN_ASSET_CLS_THUMB,
+                                 EEN_VIDEO_FORMAT_FLV,
+                                 EEN_VIDEO_FORMAT_MP4)
+
 
 __all__ = ['CarsonAuth',
            'Carson',
@@ -31,4 +41,13 @@ __all__ = ['CarsonAuth',
            'EagleEyeCamera',
            'CarsonDoor',
            'CarsonBuilding',
-           'CarsonUser']
+           'CarsonUser',
+           'EEN_ASSET_REF_ASSET',
+           'EEN_ASSET_REF_PREV',
+           'EEN_ASSET_REF_NEXT',
+           'EEN_ASSET_REF_AFTER',
+           'EEN_ASSET_CLS_ALL',
+           'EEN_ASSET_CLS_PRE',
+           'EEN_ASSET_CLS_THUMB',
+           'EEN_VIDEO_FORMAT_FLV',
+           'EEN_VIDEO_FORMAT_MP4']
