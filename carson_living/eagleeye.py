@@ -11,7 +11,8 @@ from carson_living.eagleeye_entities import EagleEyeCamera
 from carson_living.util import update_dictionary
 from carson_living.const import (BASE_HEADERS,
                                  EAGLE_EYE_API_URI,
-                                 EAGLE_EYE_DEVICE_LIST_ENDPOINT)
+                                 EAGLE_EYE_DEVICE_LIST_ENDPOINT,
+                                 EAGLE_EYE_IS_AUTH_ENDPOINT)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -77,6 +78,31 @@ class EagleEye(object):
 
         self._session_auth_key = auth_key
         self._session_brand_subdomain = brand_subdomain
+
+    def check_auth(self, refresh=True):
+        """Check if the current auth_key is still valid
+
+        Args:
+            refresh:
+                automatically update auth_key if not valid
+
+        Returns: True if a valid auth_key exists.
+
+        """
+        if not refresh and not self._session_auth_key:
+            return False
+
+        retry_auth = 1 if refresh else 0
+
+        try:
+            self.authenticated_query(
+                EAGLE_EYE_API_URI + EAGLE_EYE_IS_AUTH_ENDPOINT,
+                retry_auth=retry_auth
+            )
+        except CarsonAPIError:
+            return False
+
+        return True
 
     def authenticated_query(self, url, method='get', params=None,
                             json=None, retry_auth=1, stream=None,

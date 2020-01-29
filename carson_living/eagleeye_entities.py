@@ -291,7 +291,7 @@ live_video: {live_video_url}"""
     # Not this is quite duplicate at the moment, but a major refactor
     # would be needed to return a prepared url via authenticated_query
     def get_image_url(self, utc_dt=None,
-                      asset_ref='prev', asset_class='pre'):
+                      asset_ref='prev', asset_class='pre', check_auth=True):
         """Get binary JPEG image from the camera
 
         Args:
@@ -303,10 +303,13 @@ live_video: {live_video_url}"""
                 asset: image at timestamp
             asset_class:
                 all, pre, thumb
+            check_auth:
 
         Returns:
-            JPEG Image
+            JPEG Image URL or None if not valid Auth exists
         """
+        if check_auth and not self._api.check_auth():
+            return None
 
         timestamp = 'now'
         if utc_dt is not None:
@@ -356,7 +359,8 @@ live_video: {live_video_url}"""
 
     # Not this is quite duplicate at the moment, but a major refactor
     # would be needed to return a prepared url via authenticated_query
-    def get_video_url(self, length, utc_dt=None, video_format='flv'):
+    def get_video_url(self, length, utc_dt=None,
+                      video_format='flv', check_auth=True):
         """Get a (live) video stream from the camera
 
         Args:
@@ -364,10 +368,14 @@ live_video: {live_video_url}"""
             length: of the stream in timedelta
             video_format: flv or mp4
             utc_dt: utc timestamp for video, live for None
+            check_auth: Check auth token and refresh
 
         Returns:
-            Video url
+            Video url or None if not valid Auth exists
         """
+        if check_auth and not self._api.check_auth():
+            return None
+
         start_ts, end_ts = self._get_video_timestamps(
             length, utc_dt, video_format)
 
