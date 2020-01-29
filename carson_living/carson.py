@@ -6,8 +6,8 @@ from carson_living.auth import CarsonAuth
 
 from carson_living.carson_entities import (CarsonUser,
                                            CarsonBuilding)
-from carson_living.const import (API_URI,
-                                 ME_ENDPOINT)
+from carson_living.const import (C_API_URI,
+                                 C_ME_ENDPOINT)
 from carson_living.util import update_dictionary
 
 
@@ -54,7 +54,7 @@ class Carson(CarsonAuth):
 
         """
         _LOGGER.debug('Updating Carson Living API and associated entities')
-        url = API_URI + ME_ENDPOINT
+        url = C_API_URI + C_ME_ENDPOINT
         me_payload = self.authenticated_query(url)
 
         self._update_user(me_payload)

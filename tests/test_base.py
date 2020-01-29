@@ -6,9 +6,9 @@ import json
 import requests_mock
 
 from carson_living import (Carson)
-from carson_living.const import (API_URI,
-                                 ME_ENDPOINT,
-                                 EAGLEEYE_SESSION_ENDPOINT)
+from carson_living.const import (C_API_URI,
+                                 C_ME_ENDPOINT,
+                                 C_EEN_SESSION_ENDPOINT)
 
 from tests.const import (USERNAME, PASSWORD)
 from tests.helpers import (load_fixture,
@@ -41,7 +41,7 @@ class CarsonUnitTestBase(unittest.TestCase):
         self.c_mock_first_camera = self.c_mock_first_property['cameras'][0]
 
         # ME Mock
-        mock.get(API_URI + ME_ENDPOINT,
+        mock.get(C_API_URI + C_ME_ENDPOINT,
                  text=c_mock_me_txt)
 
         # Eagle Eye Session Mock
@@ -51,7 +51,7 @@ class CarsonUnitTestBase(unittest.TestCase):
 
         for b_id in [p['id'] for p in self.c_mock_me.get('properties')]:
             mock.get(
-                API_URI + EAGLEEYE_SESSION_ENDPOINT.format(b_id),
+                C_API_URI + C_EEN_SESSION_ENDPOINT.format(b_id),
                 text=c_mock_esession_txt
             )
 

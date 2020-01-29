@@ -7,13 +7,19 @@ from datetime import timedelta
 import requests_mock
 
 from carson_living import (EagleEyeCamera,
-                           CarsonAPIError)
-
+                           CarsonAPIError,
+                           EEN_VIDEO_FORMAT_MP4)
 
 from tests.test_base import CarsonUnitTestBase
 from tests.helpers import (setup_ee_camera_mock,
                            setup_ee_image_mock,
                            setup_ee_video_mock)
+
+# 2.7 support fallback
+try:
+    from unittest.mock import Mock
+except ImportError:
+    from mock import Mock
 
 
 class TestCamera(CarsonUnitTestBase):
@@ -45,6 +51,14 @@ class TestCamera(CarsonUnitTestBase):
                 {d[0]: d[1] for d in mock_camera[4]},
                 camera.bridges
             )
+
+            self.assertIn(str(camera.entity_id), str(camera))
+            self.assertIn(camera.name, str(camera))
+            self.assertIn(camera.account_id, str(camera))
+            self.assertIn(camera.guid, str(camera))
+
+            self.assertIn(camera.unique_entity_id, repr(camera))
+            self.assertIn("EagleEyeCamera", repr(camera))
 
     @requests_mock.Mocker()
     def test_api_call_back_update(self, mock):
@@ -100,9 +114,10 @@ class TestCamera(CarsonUnitTestBase):
         mock_image = setup_ee_image_mock(mock, subdomain)
 
         first_camera = next(iter(self.first_building.cameras))
+        sample_dt = datetime(2020, 1, 31, 23, 1, 3, 123456)
 
         buffer = io.BytesIO()
-        first_camera.get_image(buffer)
+        first_camera.get_image(buffer, sample_dt)
 
         self.assertEqual(mock_image, buffer.getvalue())
         self.assertEqual(1, mock.call_count)
@@ -111,11 +126,12 @@ class TestCamera(CarsonUnitTestBase):
     def test_camera_get_image_url(self):
         """Test get image url function"""
         first_camera = next(iter(self.first_building.cameras))
+        sample_dt = datetime(2020, 1, 31, 23, 1, 3, 123456)
 
-        url = first_camera.get_image_url()
+        url = first_camera.get_image_url(sample_dt, check_auth=False)
 
         self.assertIn('id=', url)
-        self.assertIn('timestamp=', url)
+        self.assertIn('timestamp=20200131230103.123', url)
         self.assertIn('asset_class=', url)
         self.assertIn('A=', url)
 
@@ -140,12 +156,13 @@ class TestCamera(CarsonUnitTestBase):
         """Test get video stream"""
         sample_dt = datetime(2020, 1, 24, 15, 1, 3, 123456)
         subdomain = self.c_mock_esession['activeBrandSubdomain']
-        mock_video = setup_ee_video_mock(mock, subdomain, 'mp4')
+        mock_video = setup_ee_video_mock(mock, subdomain, EEN_VIDEO_FORMAT_MP4)
 
         first_camera = next(iter(self.first_building.cameras))
 
         buffer = io.BytesIO()
-        first_camera.get_video(buffer, timedelta(seconds=30), sample_dt, 'mp4')
+        first_camera.get_video(buffer, timedelta(seconds=30),
+                               sample_dt, EEN_VIDEO_FORMAT_MP4)
 
         self.assertEqual(mock_video, buffer.getvalue())
         self.assertEqual(1, mock.call_count)
@@ -158,7 +175,8 @@ class TestCamera(CarsonUnitTestBase):
         """Test live video URL"""
         first_camera = next(iter(self.first_building.cameras))
 
-        url_live = first_camera.get_video_url(timedelta(seconds=30))
+        url_live = first_camera.get_video_url(
+            timedelta(seconds=30), check_auth=False)
 
         self.assertIn('video.flv', url_live)
         self.assertIn('id=', url_live)
@@ -172,7 +190,8 @@ class TestCamera(CarsonUnitTestBase):
 
         sample_dt = datetime(2020, 1, 24, 15, 1, 3, 123456)
         url = first_camera.get_video_url(
-            timedelta(seconds=30), sample_dt, 'mp4')
+            timedelta(seconds=30), sample_dt,
+            EEN_VIDEO_FORMAT_MP4, check_auth=False)
 
         self.assertIn('video.mp4', url)
         self.assertIn('id=', url)
@@ -188,7 +207,8 @@ class TestCamera(CarsonUnitTestBase):
 
         with self.assertRaises(CarsonAPIError):
             first_camera.get_video_url(
-                timedelta(seconds=30), video_format='mp4')
+                timedelta(seconds=30), video_format=EEN_VIDEO_FORMAT_MP4,
+                check_auth=False)
 
     def test_camera_get_live_video_throws_mp4(self):
         """Live video cannot be video_format mp4"""
@@ -197,3 +217,53 @@ class TestCamera(CarsonUnitTestBase):
 
         with self.assertRaises(CarsonAPIError):
             first_camera.get_video(buffer, timedelta(seconds=2))
+
+    def test_camera_get_image_url_check_auth(self):
+        """Test get image url function"""
+        self.first_building.eagleeye_api.check_auth = Mock(return_value=True)
+        first_camera = next(iter(self.first_building.cameras))
+
+        url = first_camera.get_image_url()
+
+        self.assertIn('id=', url)
+        self.assertIn('timestamp=', url)
+        self.assertIn('asset_class=', url)
+        self.assertIn('A=', url)
+
+        self.first_building.eagleeye_api.check_auth.assert_called_with()
+
+    def test_camera_get_live_video_url_check_auth(self):
+        """Test live video URL"""
+        self.first_building.eagleeye_api.check_auth = Mock(return_value=True)
+        first_camera = next(iter(self.first_building.cameras))
+
+        url_live = first_camera.get_video_url(timedelta(seconds=30))
+
+        self.assertIn('video.flv', url_live)
+        self.assertIn('id=', url_live)
+        self.assertIn('start_timestamp=stream_', url_live)
+        self.assertIn('end_timestamp=%2B', url_live)
+        self.assertIn('A=', url_live)
+
+        self.first_building.eagleeye_api.check_auth.assert_called_with()
+
+    def test_camera_get_image_url_check_auth_fails(self):
+        """Test get image url function"""
+
+        self.first_building.eagleeye_api.check_auth = Mock(return_value=False)
+        first_camera = next(iter(self.first_building.cameras))
+
+        url = first_camera.get_image_url()
+
+        self.assertIsNone(url)
+        self.first_building.eagleeye_api.check_auth.assert_called_with()
+
+    def test_camera_get_live_video_url_check_auth_fails(self):
+        """Test live video URL"""
+        self.first_building.eagleeye_api.check_auth = Mock(return_value=False)
+        first_camera = next(iter(self.first_building.cameras))
+
+        url_live = first_camera.get_video_url(timedelta(seconds=30))
+
+        self.assertIsNone(url_live)
+        self.first_building.eagleeye_api.check_auth.assert_called_with()

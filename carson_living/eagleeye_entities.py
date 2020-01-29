@@ -1,15 +1,17 @@
 """Eagle Eye API Entities"""
 import shutil
 
-from datetime import timedelta
 from requests import Request
 
 from carson_living.entities import _AbstractAPIEntity
 
-from carson_living.const import (EAGLE_EYE_API_URI,
-                                 EAGLE_EYE_DEVICE_ENDPOINT,
-                                 EAGLE_EYE_GET_IMAGE_ENDPOINT,
-                                 EAGLE_EYE_GET_VIDEO_ENDPOINT)
+from carson_living.const import (EEN_API_URI,
+                                 EEN_DEVICE_ENDPOINT,
+                                 EEN_GET_IMAGE_ENDPOINT,
+                                 EEN_GET_VIDEO_ENDPOINT,
+                                 EEN_ASSET_CLS_PRE,
+                                 EEN_ASSET_REF_PREV,
+                                 EEN_VIDEO_FORMAT_FLV)
 
 from carson_living.error import CarsonAPIError
 
@@ -103,7 +105,7 @@ class EagleEyeCamera(_AbstractAPIEntity):
             Eagle eye entity payload
 
         """
-        url = EAGLE_EYE_API_URI + EAGLE_EYE_DEVICE_ENDPOINT
+        url = EEN_API_URI + EEN_DEVICE_ENDPOINT
         return api.authenticated_query(
             url, params={'id': camera_id})
 
@@ -124,17 +126,13 @@ id: {entity_id}
 name: {name}
 account id: {account_id}
 guid: {guid}
-tags: {tags}
-live_image: {live_image_url}
-live_video: {live_video_url}"""
+tags: {tags}"""
         return pattern.format(
             entity_id=self.entity_id,
             name=self.name,
             account_id=self.account_id,
             guid=self.guid,
-            tags=', '.join(self.tags),
-            live_image_url=self.get_image_url(),
-            live_video_url=self.get_video_url(timedelta(seconds=30))
+            tags=', '.join(self.tags)
         )
 
     @property
@@ -242,7 +240,7 @@ live_video: {live_video_url}"""
         end_ts = '+{}'.format(length_millies)
 
         if utc_dt is None:
-            if video_format != 'flv':
+            if video_format != EEN_VIDEO_FORMAT_FLV:
                 raise CarsonAPIError(
                     'Live video streaming is only possible with .flv')
         else:
@@ -253,7 +251,9 @@ live_video: {live_video_url}"""
         return start_ts, end_ts
 
     def get_image(self, file,
-                  utc_dt=None, asset_ref='prev', asset_class='pre'):
+                  utc_dt=None,
+                  asset_ref=EEN_ASSET_REF_PREV,
+                  asset_class=EEN_ASSET_CLS_PRE):
         """Get binary JPEG image from the camera
 
         Args:
@@ -279,7 +279,7 @@ live_video: {live_video_url}"""
         if utc_dt is not None:
             timestamp = self.utc_to_een_timestamp(utc_dt)
 
-        url = EAGLE_EYE_API_URI + EAGLE_EYE_GET_IMAGE_ENDPOINT.format(
+        url = EEN_API_URI + EEN_GET_IMAGE_ENDPOINT.format(
             asset_ref)
         return self._api.authenticated_query(
             url, params={'id': self.entity_id,
@@ -291,8 +291,10 @@ live_video: {live_video_url}"""
     # Not this is quite duplicate at the moment, but a major refactor
     # would be needed to return a prepared url via authenticated_query
     def get_image_url(self, utc_dt=None,
-                      asset_ref='prev', asset_class='pre'):
-        """Get binary JPEG image from the camera
+                      asset_ref=EEN_ASSET_REF_PREV,
+                      asset_class=EEN_ASSET_CLS_PRE,
+                      check_auth=True):
+        """Get JPEG image URL from the camera
 
         Args:
             utc_dt:
@@ -303,18 +305,22 @@ live_video: {live_video_url}"""
                 asset: image at timestamp
             asset_class:
                 all, pre, thumb
+            check_auth:
+                Check auth token and refresh
 
         Returns:
-            JPEG Image
+            JPEG Image URL or None if not valid Auth exists
         """
+        if check_auth and not self._api.check_auth():
+            return None
 
         timestamp = 'now'
         if utc_dt is not None:
             timestamp = self.utc_to_een_timestamp(utc_dt)
 
-        url = EAGLE_EYE_API_URI.format(
+        url = EEN_API_URI.format(
             self._api.session_brand_subdomain
-        ) + EAGLE_EYE_GET_IMAGE_ENDPOINT.format(
+        ) + EEN_GET_IMAGE_ENDPOINT.format(
             asset_ref
         )
 
@@ -326,7 +332,8 @@ live_video: {live_video_url}"""
         return prepared.url
 
     # stream Live video to file
-    def get_video(self, file, length, utc_dt=None, video_format='flv'):
+    def get_video(self, file, length, utc_dt=None,
+                  video_format=EEN_VIDEO_FORMAT_FLV):
         """Get a (live) video stream from the camera
 
         Args:
@@ -345,7 +352,7 @@ live_video: {live_video_url}"""
         start_ts, end_ts = self._get_video_timestamps(
             length, utc_dt, video_format)
 
-        url = EAGLE_EYE_API_URI + EAGLE_EYE_GET_VIDEO_ENDPOINT.format(
+        url = EEN_API_URI + EEN_GET_VIDEO_ENDPOINT.format(
             video_format)
         return self._api.authenticated_query(
             url, params={'id': self.entity_id,
@@ -356,7 +363,8 @@ live_video: {live_video_url}"""
 
     # Not this is quite duplicate at the moment, but a major refactor
     # would be needed to return a prepared url via authenticated_query
-    def get_video_url(self, length, utc_dt=None, video_format='flv'):
+    def get_video_url(self, length, utc_dt=None,
+                      video_format=EEN_VIDEO_FORMAT_FLV, check_auth=True):
         """Get a (live) video stream from the camera
 
         Args:
@@ -364,16 +372,20 @@ live_video: {live_video_url}"""
             length: of the stream in timedelta
             video_format: flv or mp4
             utc_dt: utc timestamp for video, live for None
+            check_auth: Check auth token and refresh
 
         Returns:
-            Video url
+            Video url or None if not valid Auth exists
         """
+        if check_auth and not self._api.check_auth():
+            return None
+
         start_ts, end_ts = self._get_video_timestamps(
             length, utc_dt, video_format)
 
-        url = EAGLE_EYE_API_URI.format(
+        url = EEN_API_URI.format(
             self._api.session_brand_subdomain
-        ) + EAGLE_EYE_GET_VIDEO_ENDPOINT.format(
+        ) + EEN_GET_VIDEO_ENDPOINT.format(
             video_format
         )
 

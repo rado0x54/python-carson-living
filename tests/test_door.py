@@ -3,7 +3,7 @@
 
 import requests_mock
 
-from carson_living.const import API_VERSION
+from carson_living.const import C_API_VERSION
 
 from tests.test_base import CarsonUnitTestBase
 from tests.helpers import load_fixture
@@ -82,7 +82,7 @@ class TestDoor(CarsonUnitTestBase):
                 mock_door_payload = self.c_mock_first_property['doors'][i]
                 mock.post(
                     'https://api.carson.live/api/{}/doors/{}/open/'
-                    .format(API_VERSION, mock_door_payload['id']),
+                    .format(C_API_VERSION, mock_door_payload['id']),
                     text=load_fixture('carson.live', 'carson_door_open.json')
                 )
 
