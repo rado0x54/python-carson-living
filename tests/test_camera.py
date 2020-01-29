@@ -7,9 +7,11 @@ from datetime import timedelta
 import requests_mock
 
 from carson_living import (EagleEyeCamera,
-                           CarsonAPIError)
-from carson_living.const import (EAGLE_EYE_API_URI,
-                                 EAGLE_EYE_IS_AUTH_ENDPOINT)
+                           CarsonAPIError,
+                           EEN_VIDEO_FORMAT_MP4)
+
+from carson_living.const import (EEN_API_URI,
+                                 EEN_IS_AUTH_ENDPOINT)
 
 from tests.test_base import CarsonUnitTestBase
 from tests.helpers import (setup_ee_camera_mock,
@@ -141,12 +143,13 @@ class TestCamera(CarsonUnitTestBase):
         """Test get video stream"""
         sample_dt = datetime(2020, 1, 24, 15, 1, 3, 123456)
         subdomain = self.c_mock_esession['activeBrandSubdomain']
-        mock_video = setup_ee_video_mock(mock, subdomain, 'mp4')
+        mock_video = setup_ee_video_mock(mock, subdomain, EEN_VIDEO_FORMAT_MP4)
 
         first_camera = next(iter(self.first_building.cameras))
 
         buffer = io.BytesIO()
-        first_camera.get_video(buffer, timedelta(seconds=30), sample_dt, 'mp4')
+        first_camera.get_video(buffer, timedelta(seconds=30),
+                               sample_dt, EEN_VIDEO_FORMAT_MP4)
 
         self.assertEqual(mock_video, buffer.getvalue())
         self.assertEqual(1, mock.call_count)
@@ -174,7 +177,8 @@ class TestCamera(CarsonUnitTestBase):
 
         sample_dt = datetime(2020, 1, 24, 15, 1, 3, 123456)
         url = first_camera.get_video_url(
-            timedelta(seconds=30), sample_dt, 'mp4', check_auth=False)
+            timedelta(seconds=30), sample_dt,
+            EEN_VIDEO_FORMAT_MP4, check_auth=False)
 
         self.assertIn('video.mp4', url)
         self.assertIn('id=', url)
@@ -190,7 +194,7 @@ class TestCamera(CarsonUnitTestBase):
 
         with self.assertRaises(CarsonAPIError):
             first_camera.get_video_url(
-                timedelta(seconds=30), video_format='mp4',
+                timedelta(seconds=30), video_format=EEN_VIDEO_FORMAT_MP4,
                 check_auth=False)
 
     def test_camera_get_live_video_throws_mp4(self):
@@ -205,8 +209,8 @@ class TestCamera(CarsonUnitTestBase):
     def test_camera_get_image_url_check_auth(self, mock):
         """Test get image url function"""
         asd = self.c_mock_esession['activeBrandSubdomain']
-        mock.get(EAGLE_EYE_API_URI.format(asd)
-                 + EAGLE_EYE_IS_AUTH_ENDPOINT, status_code=200, text='true')
+        mock.get(EEN_API_URI.format(asd)
+                 + EEN_IS_AUTH_ENDPOINT, status_code=200, text='true')
 
         first_camera = next(iter(self.first_building.cameras))
 
@@ -223,8 +227,8 @@ class TestCamera(CarsonUnitTestBase):
     def test_camera_get_live_video_url_check_auth(self, mock):
         """Test live video URL"""
         asd = self.c_mock_esession['activeBrandSubdomain']
-        mock.get(EAGLE_EYE_API_URI.format(asd)
-                 + EAGLE_EYE_IS_AUTH_ENDPOINT, status_code=200, text='true')
+        mock.get(EEN_API_URI.format(asd)
+                 + EEN_IS_AUTH_ENDPOINT, status_code=200, text='true')
 
         first_camera = next(iter(self.first_building.cameras))
 

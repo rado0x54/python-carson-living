@@ -5,11 +5,15 @@ import time
 import json
 import jwt
 
-from carson_living.const import (EAGLE_EYE_API_URI,
-                                 EAGLE_EYE_DEVICE_ENDPOINT,
-                                 EAGLE_EYE_DEVICE_LIST_ENDPOINT,
-                                 EAGLE_EYE_GET_IMAGE_ENDPOINT,
-                                 EAGLE_EYE_GET_VIDEO_ENDPOINT)
+from carson_living import (EEN_ASSET_REF_PREV,
+                           EEN_VIDEO_FORMAT_FLV)
+
+from carson_living.const import (EEN_API_URI,
+                                 EEN_DEVICE_ENDPOINT,
+                                 EEN_DEVICE_LIST_ENDPOINT,
+                                 EEN_GET_IMAGE_ENDPOINT,
+                                 EEN_GET_VIDEO_ENDPOINT)
+
 from tests.const import TOKEN_PAYLOAD_TEMPLATE
 
 
@@ -58,9 +62,9 @@ def setup_ee_camera_mock(mock, active_brand_subdomain,
         'eagleeyenetworks.com', filename)
     e_mock_camera = json.loads(e_mock_camera_txt)
     mock.get(
-        EAGLE_EYE_API_URI.format(
+        EEN_API_URI.format(
             active_brand_subdomain)
-        + EAGLE_EYE_DEVICE_ENDPOINT,
+        + EEN_DEVICE_ENDPOINT,
         text=e_mock_camera_txt
     )
 
@@ -83,9 +87,9 @@ def setup_ee_device_list_mock(mock, active_brand_subdomain,
         'eagleeyenetworks.com', filename)
     e_mock_list = json.loads(e_mock_list_txt)
     mock.get(
-        EAGLE_EYE_API_URI.format(
+        EEN_API_URI.format(
             active_brand_subdomain)
-        + EAGLE_EYE_DEVICE_LIST_ENDPOINT,
+        + EEN_DEVICE_LIST_ENDPOINT,
         text=e_mock_list_txt
     )
 
@@ -94,7 +98,7 @@ def setup_ee_device_list_mock(mock, active_brand_subdomain,
 
 def setup_ee_image_mock(mock, active_brand_subdomain,
                         filename='camera_image.jpeg',
-                        asset_ref='prev'):
+                        asset_ref=EEN_ASSET_REF_PREV):
     """Setup a EE Device endpoint
 
     Args:
@@ -109,16 +113,16 @@ def setup_ee_image_mock(mock, active_brand_subdomain,
     binary_image = load_fixture(
         'eagleeyenetworks.com', filename, 'rb')
     mock.get(
-        EAGLE_EYE_API_URI.format(
+        EEN_API_URI.format(
             active_brand_subdomain)
-        + EAGLE_EYE_GET_IMAGE_ENDPOINT.format(asset_ref),
+        + EEN_GET_IMAGE_ENDPOINT.format(asset_ref),
         content=binary_image
     )
     return binary_image
 
 
 def setup_ee_video_mock(mock, active_brand_subdomain,
-                        video_format='flv',
+                        video_format=EEN_VIDEO_FORMAT_FLV,
                         filename='camera_video.flv'):
     """Setup a EE Device endpoint
 
@@ -134,9 +138,9 @@ def setup_ee_video_mock(mock, active_brand_subdomain,
     binary_video = load_fixture(
         'eagleeyenetworks.com', filename, 'rb')
     mock.get(
-        EAGLE_EYE_API_URI.format(
+        EEN_API_URI.format(
             active_brand_subdomain)
-        + EAGLE_EYE_GET_VIDEO_ENDPOINT.format(
+        + EEN_GET_VIDEO_ENDPOINT.format(
             video_format
         ),
         content=binary_video

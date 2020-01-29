@@ -5,9 +5,9 @@ from carson_living.entities import (_AbstractEntity,
 
 from carson_living.eagleeye import EagleEye
 
-from carson_living.const import (API_URI,
-                                 EAGLEEYE_SESSION_ENDPOINT,
-                                 DOOR_OPEN_ENDPOINT)
+from carson_living.const import (C_API_URI,
+                                 C_EEN_SESSION_ENDPOINT,
+                                 C_DOOR_OPEN_ENDPOINT)
 
 from carson_living.util import update_dictionary
 
@@ -73,7 +73,7 @@ pmc: {pmc_name}"""
                 subdomain(str): Eagle Eye subdomain to use with account
 
         """
-        url = API_URI + EAGLEEYE_SESSION_ENDPOINT.format(building_id)
+        url = C_API_URI + C_EEN_SESSION_ENDPOINT.format(building_id)
         session = carson_api.authenticated_query(url)
         return session.get('sessionId'), session.get('activeBrandSubdomain')
 
@@ -524,5 +524,5 @@ default_in_building: {default_in_building}"""
         """Unlock the door
 
         """
-        url = API_URI + DOOR_OPEN_ENDPOINT.format(self.entity_id)
+        url = C_API_URI + C_DOOR_OPEN_ENDPOINT.format(self.entity_id)
         self._api.authenticated_query(url, method='post')

@@ -10,9 +10,9 @@ from carson_living.eagleeye_entities import EagleEyeCamera
 
 from carson_living.util import update_dictionary
 from carson_living.const import (BASE_HEADERS,
-                                 EAGLE_EYE_API_URI,
-                                 EAGLE_EYE_DEVICE_LIST_ENDPOINT,
-                                 EAGLE_EYE_IS_AUTH_ENDPOINT)
+                                 EEN_API_URI,
+                                 EEN_DEVICE_LIST_ENDPOINT,
+                                 EEN_IS_AUTH_ENDPOINT)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -96,7 +96,7 @@ class EagleEye(object):
 
         try:
             self.authenticated_query(
-                EAGLE_EYE_API_URI + EAGLE_EYE_IS_AUTH_ENDPOINT,
+                EEN_API_URI + EEN_IS_AUTH_ENDPOINT,
                 retry_auth=retry_auth
             )
         except CarsonAPIError:
@@ -172,7 +172,7 @@ class EagleEye(object):
     def _update_cameras(self):
         # Query List
         device_list = self.authenticated_query(
-            EAGLE_EYE_API_URI + EAGLE_EYE_DEVICE_LIST_ENDPOINT
+            EEN_API_URI + EEN_DEVICE_LIST_ENDPOINT
         )
 
         update_cameras = {

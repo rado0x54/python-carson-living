@@ -14,8 +14,8 @@ except ImportError:
 from carson_living import (EagleEye,
                            CarsonError)
 
-from carson_living.const import (EAGLE_EYE_API_URI,
-                                 EAGLE_EYE_IS_AUTH_ENDPOINT)
+from carson_living.const import (EEN_API_URI,
+                                 EEN_IS_AUTH_ENDPOINT)
 from tests.helpers import setup_ee_device_list_mock
 
 FIXTURE_SESSION_AUTH_KEY = 'sample_auth_key'
@@ -101,8 +101,8 @@ class TestEagleEye(unittest.TestCase):
     @requests_mock.Mocker()
     def test_check_auth_auto_refreshes(self, mock):
         """Correct Initialization of EagleEye"""
-        mock.get(EAGLE_EYE_API_URI.format(FIXTURE_BRANDED_SUBDOMAIN)
-                 + EAGLE_EYE_IS_AUTH_ENDPOINT, status_code=200, text='true')
+        mock.get(EEN_API_URI.format(FIXTURE_BRANDED_SUBDOMAIN)
+                 + EEN_IS_AUTH_ENDPOINT, status_code=200, text='true')
 
         auth = self.eagle_eye.check_auth(refresh=False)
         self.assertEqual(True, auth)
@@ -111,8 +111,8 @@ class TestEagleEye(unittest.TestCase):
     @requests_mock.Mocker()
     def test_check_auth_fails_on_zero_refresh(self, mock):
         """Correct Initialization of EagleEye"""
-        mock.get(EAGLE_EYE_API_URI.format(FIXTURE_BRANDED_SUBDOMAIN)
-                 + EAGLE_EYE_IS_AUTH_ENDPOINT, status_code=401)
+        mock.get(EEN_API_URI.format(FIXTURE_BRANDED_SUBDOMAIN)
+                 + EEN_IS_AUTH_ENDPOINT, status_code=401)
 
         auth = self.eagle_eye.check_auth(refresh=False)
         self.assertEqual(False, auth)
