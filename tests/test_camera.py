@@ -131,7 +131,7 @@ class TestCamera(CarsonUnitTestBase):
         url = first_camera.get_image_url(sample_dt, check_auth=False)
 
         self.assertIn('id=', url)
-        self.assertIn('timestamp=', url)
+        self.assertIn('timestamp=20200131230103.123', url)
         self.assertIn('asset_class=', url)
         self.assertIn('A=', url)
 
