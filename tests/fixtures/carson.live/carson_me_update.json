@@ -75,7 +75,7 @@
         "pmcName": "Landlord Inc._update",
         "serviceRequestsEnabled": true,
         "comelitData": {
-          "hostAddress": "100.12.113.28_update",
+          "hostAddress": "127.0.0.1",
           "port": 64100
         },
         "visitorInvitesLeft": 4,
@@ -150,7 +150,7 @@
         "possibleToReceiveCalls": true,
         "country": "United States_update",
         "state": "New York_update",
-        "timezone": "America/New_York_update",
+        "timezone": "America/New_York",
         "roles": [],
         "units": [
           {
@@ -176,8 +176,8 @@
         "paymentsEnabled": false,
         "visitors": [],
         "area": {
-          "lat": 41.7866273,
-          "lon": -71.9755359,
+          "lat": 42.7866273,
+          "lon": -72.9755359,
           "radius": 200
         },
         "visitorInviteEnabled": true,
@@ -186,7 +186,7 @@
         "pmcName": "Landlord Inc._new",
         "serviceRequestsEnabled": true,
         "comelitData": {
-          "hostAddress": "100.12.113.28_new",
+          "hostAddress": "127.0.0.1",
           "port": 64100
         },
         "visitorInvitesLeft": 4,
@@ -218,7 +218,7 @@
         "id": 2437,
         "type": "phone_number_update",
         "primary": true,
-        "contactInfo": "+14158890432_update",
+        "contactInfo": "+10000000000_update",
         "verified": true,
         "confirmationInfo": null
       }
