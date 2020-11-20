@@ -7,6 +7,8 @@ python:
 jobs:
   include:
     - if: branch IN (master, develop)
+      python: 3.9
+    - if: branch IN (master, develop)
       python: 3.8
     - if: branch IN (master, develop)
       python: 3.6
