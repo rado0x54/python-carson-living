@@ -67,7 +67,7 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_update_token_success(self, mock):
         """Test token update"""
-        mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
+        mock.post('https://api.carson.live/api/v1.4.3/auth/login/',
                   text=load_fixture('carson.live', 'carson_login.json'))
 
         mock_token_update_cb = Mock()
@@ -89,7 +89,7 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_update_token_fail(self, mock):
         """Test authentication failure in token update"""
-        mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
+        mock.post('https://api.carson.live/api/v1.4.3/auth/login/',
                   text=load_fixture('carson.live', 'carson_auth_failure.json'),
                   status_code=401)
 
@@ -110,9 +110,9 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_successful_query_without_initial_token(self, mock):
         """Test automatic authentication on query without initial token"""
-        mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
+        mock.post('https://api.carson.live/api/v1.4.3/auth/login/',
                   text=load_fixture('carson.live', 'carson_login.json'))
-        query_url = 'https://api.carson.live/api/v1.4.1/me/'
+        query_url = 'https://api.carson.live/api/v1.4.3/me/'
         mock.get(query_url,
                  text=load_fixture('carson.live', 'carson_me.json'))
 
@@ -129,7 +129,7 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_successful_query_with_initial_token(self, mock):
         """Test query with initial valid token"""
-        query_url = 'https://api.carson.live/api/v1.4.1/me/'
+        query_url = 'https://api.carson.live/api/v1.4.3/me/'
         mock.get(query_url,
                  text=load_fixture('carson.live', 'carson_me.json'))
 
@@ -148,9 +148,9 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_recursive_retry(self, mock):
         """"Test recursive query retry on Authentication Failure"""
-        mock.post('https://api.carson.live/api/v1.4.1/auth/login/',
+        mock.post('https://api.carson.live/api/v1.4.3/auth/login/',
                   text=load_fixture('carson.live', 'carson_login.json'))
-        query_url = 'https://api.carson.live/api/v1.4.1/me/'
+        query_url = 'https://api.carson.live/api/v1.4.3/me/'
         mock.get(query_url,
                  text=load_fixture('carson.live', 'carson_auth_failure.json'),
                  status_code=401)
@@ -169,7 +169,7 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_raise_communication_error_on_empty(self, mock):
         """Test failure on empty response"""
-        query_url = 'https://api.carson.live/api/v1.4.1/me/'
+        query_url = 'https://api.carson.live/api/v1.4.3/me/'
         mock.get(query_url,
                  status_code=500)
 
@@ -185,7 +185,7 @@ class TestCarsonAuth(unittest.TestCase):
     @requests_mock.Mocker()
     def test_raise_communication_error_wrong_json(self, mock):
         """Test failure on response with missing keys"""
-        query_url = 'https://api.carson.live/api/v1.4.1/me/'
+        query_url = 'https://api.carson.live/api/v1.4.3/me/'
         mock.get(query_url,
                  text=load_fixture('carson.live', 'carson_missing_keys.json'))
 
