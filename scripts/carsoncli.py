@@ -128,8 +128,6 @@ def main():
             with open('image_{}_3d_with_url.jpeg'.format(
                     cam.entity_id), 'wb') as file:
                 file.write(response.content)
-            # do only 1 cam.
-            break
 
         try:
             for cam in building.cameras:

@@ -35,7 +35,7 @@ BASE_HEADERS = {
 # Carson API endpoints
 # Beware URLs end in '/', otherwise it returns a
 # HTTP/1.1 301 Moved Permanently to the correct version.
-C_API_VERSION = 'v1.4.1'
+C_API_VERSION = 'v1.4.3'
 C_API_URI = 'https://api.carson.live/api/' + C_API_VERSION
 
 C_AUTH_ENDPOINT = '/auth/login/'

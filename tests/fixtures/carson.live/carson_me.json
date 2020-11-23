@@ -62,7 +62,7 @@
         "pmcName": "Landlord Inc.",
         "serviceRequestsEnabled": true,
         "comelitData": {
-          "hostAddress": "100.12.113.28",
+          "hostAddress": "127.0.0.1",
           "port": 64100
         },
         "visitorInvitesLeft": 4,
@@ -151,7 +151,7 @@
         "id": 2437,
         "type": "phone_number",
         "primary": true,
-        "contactInfo": "+14158890432",
+        "contactInfo": "+10000000000",
         "verified": true,
         "confirmationInfo": null
       }
