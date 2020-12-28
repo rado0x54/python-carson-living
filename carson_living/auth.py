@@ -10,7 +10,8 @@ from jwt import InvalidTokenError
 
 from carson_living.const import (BASE_HEADERS,
                                  C_API_URI,
-                                 C_AUTH_ENDPOINT)
+                                 C_AUTH_ENDPOINT,
+                                 RETRY_TOKEN)
 from carson_living.util import default_carson_response_handler
 from carson_living.error import (CarsonAPIError,
                                  CarsonAuthenticationError,
@@ -152,7 +153,7 @@ class CarsonAuth(object):
         return self._token_expiration_time > int(time.time())
 
     def authenticated_query(self, url, method='get', params=None,
-                            json=None, retry_auth=1,
+                            json=None, retry_auth=RETRY_TOKEN,
                             response_handler=default_carson_response_handler):
         """Perform an authenticated Query against Carson Living
 
