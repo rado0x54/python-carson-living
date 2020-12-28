@@ -159,15 +159,6 @@ Checkout ``./scripts/carsoncli.py`` for further API implementation examples.
 
 Development Notes
 -----------------
-Request Headers
-~~~~~~~~~~~~~~~
-The library currently works with the following base headers:
-
-.. code-block::
-
-    User-Agent: Carson/1.0.171 (live.carson.app; build:245; iOS 13.1.0) Alamofire/1.0.171
-    X-Device-Type: ios
-    X-App-Version: 1.0.171(245)
 
 Code Documentation
 ~~~~~~~~~~~~~~~~~~
