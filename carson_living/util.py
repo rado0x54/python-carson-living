@@ -31,11 +31,10 @@ def default_carson_response_handler(response):
 
         if r_json.get(CARSON_RESPONSE['CODE']) != 0:
             raise CarsonAPIError(
-                # pylint: disable=too-many-format-args
                 'Carson API error returned unsuccessful state. '
                 'Status: {}, Message: {}'.format(
                     r_json.get(CARSON_RESPONSE['STATUS'], '<no status>'),
-                    r_json.get(CARSON_RESPONSE['MSG']), '<no msg>')
+                    r_json.get(CARSON_RESPONSE['MSG'], '<no msg>'))
                 )
     except ValueError:
         raise CarsonCommunicationError(

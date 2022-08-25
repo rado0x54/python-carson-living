@@ -21,7 +21,7 @@ def load_fixture(folder, filename, mode='r'):
     """Load a fixture."""
     path = os.path.join(os.path.dirname(__file__),
                         'fixtures', folder, filename)
-    with open(path, mode) as fdp:
+    with open(path, mode, encoding="utf-8") as fdp:
         return fdp.read()
 
 

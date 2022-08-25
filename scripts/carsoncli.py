@@ -125,14 +125,12 @@ def main():
             img_url = cam.get_image_url(three_days_ago)
             print(img_url)
             response = requests.get(img_url)
-            with open('image_{}_3d_with_url.jpeg'.format(
-                    cam.entity_id), 'wb') as file:
+            with open(f'image_{cam.entity_id}_3d_with_url.jpeg', 'wb') as file:
                 file.write(response.content)
 
         try:
             for cam in building.cameras:
-                with open('video_{}_3d.flv'.format(
-                        cam.entity_id), 'wb') as file:
+                with open(f'video_{cam.entity_id}_3d.flv', 'wb') as file:
                     cam.get_video(file, timedelta(seconds=5), three_days_ago)
         except CarsonAPIError as error:
             # Somehow historic videos currently return

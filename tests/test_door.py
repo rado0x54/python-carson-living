@@ -81,8 +81,8 @@ class TestDoor(CarsonUnitTestBase):
             with requests_mock.Mocker() as mock:
                 mock_door_payload = self.c_mock_first_property['doors'][i]
                 mock.post(
-                    'https://api.carson.live/api/{}/doors/{}/open/'
-                    .format(C_API_VERSION, mock_door_payload['id']),
+                    f'https://api.carson.live/api/'
+                    f'{C_API_VERSION}/doors/{mock_door_payload["id"]}/open/',
                     text=load_fixture('carson.live', 'carson_door_open.json')
                 )
 
