@@ -19,8 +19,10 @@ Carson Living Python API
 
 Python Carson Living is a library written in Python that exposes the carson.live devices as Python objects.
 
-Please note, that `Carson <https://carson.live>`_ does not provide an official API documentation, therefore this project
-is solely based on reverse engineering.
+Disclaimer
+----------
+Please use this library at your own risk and make sure that you do not violate the
+`Terms of Service of Carson <https://www.carson.live/terms>`_.
 
 Getting started
 ---------------
@@ -157,15 +159,6 @@ Checkout ``./scripts/carsoncli.py`` for further API implementation examples.
 
 Development Notes
 -----------------
-Request Headers
-~~~~~~~~~~~~~~~
-The library currently works with the following base headers:
-
-.. code-block::
-
-    User-Agent: Carson/1.0.171 (live.carson.app; build:245; iOS 13.1.0) Alamofire/1.0.171
-    X-Device-Type: ios
-    X-App-Version: 1.0.171(245)
 
 Code Documentation
 ~~~~~~~~~~~~~~~~~~
@@ -187,13 +180,6 @@ The following is not supported by the API yet and remains TODO.
 - Integrate Twilio (``twilio/access-token/``)
 - Expand and extract EagleEye API (into separate project?).
 
-
-
-License
--------
-
-python-carson-living is released under the Apache License Version 2.0. See the LICENSE_ file for more
-details.
 
 Credits && Thanks
 -----------------

@@ -13,8 +13,6 @@ jobs:
     - if: branch IN (master, develop)
       python: 3.6
     - if: branch IN (master, develop)
-      python: pypy
-    - if: branch IN (master, develop)
       python: pypy3
 
 
